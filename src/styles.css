@@ -1,0 +1,1292 @@
+/* ---------- Responsive Wrapper ---------- */
+.app-wrapper {
+  width: 360px;
+  height: 800px;
+  margin: 0 auto;
+  position: relative;
+  overflow-y: auto;
+}
+
+@media (max-width: 360px) {
+  .app-wrapper {
+    transform: scale(calc(100vw / 360));
+    transform-origin: top center;
+  }
+}
+
+
+/* Common Screen Container */
+.screen-container {
+  position: relative;
+  width: 360px;
+  height: 800px;
+  background: #FFFFFF;
+  overflow-y: auto;
+  
+}
+
+/* Dashboard Container: override background */
+.dashboard-container {
+  position: relative;
+  width: 360px;
+  height: 800px;
+  background: #F0F0F0;
+  overflow-y: auto;
+}
+
+/* Logo (Home Screen) */
+.logo {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  left: 30px;
+  top: 171px;
+  background: url("Your-paragraph-text.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* -------------------- Common Elements -------------------- */
+
+/* Back Arrow */
+.back-arrow {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  left: 20px;
+  top: 27px;
+  cursor: pointer;
+}
+.vector {
+  position: absolute;
+  left: 18.75%;
+  right: 18.75%;
+  top: 18.75%;
+  bottom: 18.75%;
+  background: url("backarrow.png");
+}
+
+/* Titles (for sign-up screens and dashboard labels) */
+.create-account,
+.age-title,
+.height-title,
+.weight-title,
+.date-label,
+.summary-heading {
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  color: #000000;
+}
+.create-account,
+.age-title,
+.height-title,
+.weight-title {
+  position: absolute;
+  width: 226px;
+  height: 20px;
+  left: 20px;
+  top: 261px;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+}
+.date-label {
+  position: absolute;
+  width: 146px;
+  height: 17px;
+  left: 20px;
+  top: 39px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+}
+.summary-heading {
+  position: absolute;
+  width: 115px;
+  height: 29px;
+  left: 20px;
+  top: 64px;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+}
+
+/* Input Field */
+.email-input {
+  box-sizing: border-box;
+  position: absolute;
+  width: 320px;
+  height: 40px;
+  left: 20px;
+  top: 332px;
+  background: #FFFFFF;
+  border: 2px solid #318516;
+  border-radius: 20px;
+  padding: 0 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #4A4A4A;
+}
+.email-label {
+  box-sizing: border-box;
+  position: absolute;
+  width: 81px;
+  height: 20px;
+  left: 41px;
+  top: 342px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+
+/* Age Label for Dropdown */
+.age-label {
+  position: absolute;
+  width: 120px;
+  height: 20px;
+  left: 41px;
+  top: 342px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+
+/* Age Dropdown Select */
+.age-select {
+  box-sizing: border-box;
+  position: absolute;
+  width: 320px;
+  height: 40px;
+  left: 20px;
+  top: 362px;
+  background: #FFFFFF;
+  border: 2px solid #318516;
+  border-radius: 20px;
+  padding: 0 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #4A4A4A;
+}
+
+/* Next Button (common for sign-up screens) */
+.next-btn {
+  position: absolute;
+  width: 320px;
+  height: 40px;
+  left: 20px;
+  background: #318516;
+  border-radius: 20px;
+  cursor: pointer;
+  top: 401px;
+  z-index: 1;
+}
+.next-text {
+  position: absolute;
+  width: 33px;
+  height: 20px;
+  left: 163px;
+  top: 411px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #FFFFFF;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* Next Button for Measurements Screen */
+.next-btn-measure {
+  position: absolute;
+  width: 320px;
+  height: 40px;
+  left: 20px;
+  background: #318516;
+  border-radius: 20px;
+  cursor: pointer;
+  top: 568px;
+  z-index: 1;
+}
+.next-text-measure {
+  position: absolute;
+  width: 33px;
+  height: 20px;
+  left: 163px;
+  top: 578px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #FFFFFF;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* Visibility Icon (Password Screen) */
+.visibility-icon {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 308px;
+  top: 343px;
+  cursor: pointer;
+}
+.visibility-vector {
+  position: absolute;
+  left: 6.41%;
+  right: 6.41%;
+  top: 13.27%;
+  bottom: 8.88%;
+  background: url("visibility.png");
+}
+
+/* -------------------- Measurement Screen Specific -------------------- */
+
+/* Measurement Screen Titles */
+.measurement-height-title {
+  position: absolute;
+  top: 100px;
+  left: 20px;
+  width: 320px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 20px;
+  color: #000000;
+  text-align: left;
+}
+
+.measurement-weight-title {
+  position: absolute;
+  top: 220px;
+  left: 20px;
+  width: 320px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 20px;
+  color: #000000;
+  text-align: left;
+}
+
+/* Adjusted Height Inputs for Measurement Screen */
+.height-input-left {
+  box-sizing: border-box;
+  position: absolute;
+  width: 150px;
+  height: 40px;
+  left: 20px;
+  top: 140px;
+  background: #FFFFFF;
+  border: 2px solid #318516;
+  border-radius: 20px;
+  padding: 0 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #4A4A4A;
+}
+.height-input-right {
+  box-sizing: border-box;
+  position: absolute;
+  width: 150px;
+  height: 40px;
+  left: 190px;
+  top: 140px;
+  background: #FFFFFF;
+  border: 2px solid #318516;
+  border-radius: 20px;
+  padding: 0 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #4A4A4A;
+}
+
+.measurement-ft-text {
+  position: absolute;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 20px;
+  color: #4A4A4A;
+  left: 141px;
+  top: 150px;
+}
+
+.measurement-inch-text {
+  position: absolute;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 20px;
+  color: #4A4A4A;
+  left: 302px;
+  top: 150px;
+}
+
+/* Adjusted Weight Input for Measurement Screen */
+.weight-input {
+  box-sizing: border-box;
+  position: absolute;
+  width: 320px;
+  height: 40px;
+  left: 20px;
+  top: 260px;
+  background: #FFFFFF;
+  border: 2px solid #318516;
+  border-radius: 20px;
+  padding: 0 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #4A4A4A;
+}
+
+.measurement-kg-text {
+  position: absolute;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 20px;
+  color: #4A4A4A;
+  left: 306px;
+  top: 270px;
+}
+
+/* -------------------- Dashboard Specific -------------------- */
+
+/* Meal Plot */
+.meal-plot {
+  position: absolute;
+  left: 20px;
+  top: 100px;
+  width: 320px;
+  height: 580px;
+  background: #FFFFFF;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.plot-placeholder {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Profile Icon */
+.profile-icon {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  left: 286px;
+  top: 44px;
+  object-fit: cover;
+}
+
+.nav-bar {
+  position: absolute;
+  width: 286px;
+  height: 30px;
+  left: 37px;
+  top: 709px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 58px;
+}
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+.nav-icon {
+  width: 30px;
+  height: 30px;
+  position: relative;
+}
+.summary-icon {
+  background: url("summary.png");
+  width: 30px;
+  height: 30px;
+}
+.record-icon {
+  background: url("record.png");
+  width: 27px;
+  height: 27px;
+}
+.recipe-icon {
+  background: url("recipe.png");
+  width: 30px;
+  height: 30px;
+}
+.plan-icon {
+  background: url("plan.png");
+  width: 28px;
+  height: 28px;
+}
+.nav-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #000000;
+}
+
+/* -------------------- Home Screen Button Styles -------------------- */
+.btn {
+  position: absolute;
+  left: 64px;
+  width: 233px;
+  height: 41px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  z-index: 2;
+}
+.btn.sign-up {
+  top: 550px;
+  background: #318516;
+  border-radius: 20px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #FFFFFF;
+}
+.btn.log-in {
+  top: 616px;
+  background: #FFFFFF;
+  border: 2px solid #318516;
+  border-radius: 20px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #318516;
+}
+
+/* Terms Text */
+.terms {
+  position: absolute;
+  width: 184px;
+  height: 20px;
+  left: 88px;
+  top: 702px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 8px;
+  line-height: 10px;
+  text-align: center;
+  color: #318516;
+  z-index: 2;
+}
+
+/* -------------------- Updated Gender Icons Using Images (with Radio Buttons) -------------------- */
+.gender-container {
+  position: absolute;
+  top: 150px;
+  width: 100%;
+  text-align: center;
+}
+.gender-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #000000;
+}
+.gender-option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+.gender-option input {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #318516;
+  border-radius: 50%;
+  margin-right: 8px;
+  cursor: pointer;
+  position: relative;
+}
+.gender-option input:checked::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background: #318516;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+}
+.gender-icon {
+  width: 40px;
+  height: 40px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.male-icon {
+  background-image: url("male-icon.png");
+}
+.female-icon {
+  background-image: url("female-icon.png");
+}
+
+/* -------------------- Recipe Screen Specific -------------------- */
+.recipe-screen {
+  position: relative;
+  width: 360px;
+  height: 800px;
+  background: #F0F0F0;
+  overflow-y: auto;
+}
+
+/* Hide default header/footer on Recipe screen */
+.recipe-screen .header,
+.recipe-screen .footer {
+  display: none;
+}
+
+/* Recommended Recipes Title */
+.recommended-recipes {
+  position: absolute;
+  width: 281px;
+  height: 29px;
+  left: 20px;
+  top: 64px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Main Recipe Section (Rectangle 6) */
+.recipe-main {
+  position: absolute;
+  width: 320px;
+  height: 237px;
+  left: 20px;
+  top: 151px;
+  background: #D9D9D9;
+  border-radius: 20px;
+}
+
+/* Recipe Main Image (vada-pav-9) */
+.recipe-main-bg {
+  position: absolute;
+  width: 299px;
+  height: 181px;
+  background: url("salad.png");
+  background-size: cover;
+  border-radius: 18px;
+}
+
+/* Recipe Title ("Vada Pav") */
+.recipe-title {
+  position: absolute;
+  width: 74px;
+  height: 19px;
+  left: 37px;
+  top: 169px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Recipe Grid for Additional Items */
+.recipe-grid {
+  position: absolute;
+  width: 320px;
+  height: 240px;
+  left: 20px;
+  top: 413px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.recipe-item {
+  width: 149px;
+  height: 115px;
+  background: #D9D9D9;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000000;
+}
+
+/* -------------------- Plan Screen Specific -------------------- */
+.plan-screen {
+  position: relative;
+  width: 360px;
+  height: 800px;
+  background: #F0F0F0;
+  overflow-y: auto;
+}
+
+/* Plan Header */
+.plan {
+  position: absolute;
+  width: 52px;
+  height: 29px;
+  left: 20px;
+  top: 64px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* -------------------- Day Buttons -------------------- */
+.day-buttons {
+  position: absolute;
+  top: 180px;
+  left: 20px;
+  height: 64px;
+  width: 320px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Center items vertically */
+  background-color: #D9D9D9;
+  border-radius: 20px;
+  overflow: visible;
+}
+
+.day-button {
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #434343;
+  border-style: none;
+  background-color: #D9D9D9;
+}
+
+.day-button.active {
+  background: #318516;
+  color: #FFFFFF;
+  width: 106px;
+  height: 120px;
+  border-radius: 20px;
+}
+/* -------------------- Dinner Section -------------------- */
+/* Group 7 for Dinner */
+.group7.dinner {
+  position: absolute;
+  width: 54px;
+  height: 19px;
+  left: 21px;
+  top: 612px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Group 8 for Dinner Description */
+.group8.dinner-desc {
+  position: absolute;
+  width: 128px;
+  height: 36px;
+  left: 132px;
+  top: 674px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Dinner Image */
+.roti_image {
+  position: absolute;
+  width: 85.5px;
+  height: 76.5px;
+  left: 21px;
+  top: 646px;
+  background: url("roti_or_rice_what_is_better1.png");
+  background-size: cover;
+  border-radius: 12px;
+}
+
+/* -------------------- Additional Groups from Export -------------------- */
+.group2 {
+  position: absolute;
+  width: 72px;
+  height: 17px;
+  left: 255px;
+  top: 178px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #434343;
+}
+
+.group6 {
+  position: absolute;
+  width: 36px;
+  height: 15px;
+  left: 291px;
+  top: 285px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #318516;
+}
+
+.groupS {
+  position: absolute;
+  width: 6px;
+  height: 10px;
+  left: 37px;
+  top: 719px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 8px;
+  line-height: 10px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+.group3 {
+  position: absolute;
+  width: 71px;
+  height: 17px;
+  left: 34px;
+  top: 152px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #434343;
+}
+
+.group12 {
+  position: absolute;
+  width: 72px;
+  height: 17px;
+  left: 255px;
+  top: 152px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #434343;
+}
+
+.group1 {
+  position: absolute;
+  width: 49px;
+  height: 19px;
+  left: 156px;
+  top: 151px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #FFFFFF;
+}
+
+.group4 {
+  position: absolute;
+  width: 233px;
+  height: 23px;
+  left: 64px;
+  top: 177px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 23px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #FFFFFF;
+}
+
+.group4-2 {
+  position: absolute;
+  width: 11px;
+  height: 19px;
+  left: 286px;
+  top: 181px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #434343;
+}
+
+.group4-3 {
+  position: absolute;
+  width: 11px;
+  height: 19px;
+  left: 64px;
+  top: 177px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #434343;
+}
+
+.group5 {
+  position: absolute;
+  width: 129px;
+  height: 15px;
+  left: 34px;
+  top: 259px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #434343;
+}
+
+/* -------------------- Breakfast Section -------------------- */
+.group7.breakfast {
+  position: absolute;
+  width: 78px;
+  height: 19px;
+  left: 20px;
+  top: 321px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+.group8.breakfast-desc {
+  position: absolute;
+  width: 134px;
+  height: 36px;
+  left: 131px;
+  top: 383px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+.best_upma_image {
+  position: absolute;
+  width: 85.5px;
+  height: 76.5px;
+  left: 20px;
+  top: 355px;
+  background: url("Best-South-Indian-Rava-Upma-Recipe.png");
+  background-size: cover;
+  border-radius: 12px;
+}
+
+/* -------------------- Lunch Section -------------------- */
+.group7.lunch {
+  position: absolute;
+  width: 50px;
+  height: 19px;
+  left: 21px;
+  top: 467px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+.group8.lunch-desc {
+  position: absolute;
+  width: 133px;
+  height: 36px;
+  left: 132px;
+  top: 529px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+.easy_rice_image {
+  position: absolute;
+  width: 85.5px;
+  height: 76.5px;
+  left: 21px;
+  top: 501px;
+  background: url("Easy-Egg-fried-rice-2.png");
+  background-size: cover;
+  border-radius: 12px;
+}
+
+/* -------------------- Record Screen Specific -------------------- */
+.record-screen {
+  position: relative;
+  width: 360px;
+  height: 800px;
+  background: #F0F0F0;
+  overflow-y: auto;
+}
+
+/* Record Label */
+.record-label {
+  position: absolute;
+  width: 85px;
+  height: 29px;
+  left: 20px;
+  top: 64px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Rectangle 4: Camera Preview */
+.rectangle4 {
+  position: absolute;
+  width: 317px;
+  height: 272px;
+  left: 20px;
+  top: 226px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #000; /* Fallback background */
+}
+
+.webcam-record, .captured-record {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Rectangle 3: Bottom Navigation Background */
+.rectangle3 {
+  position: absolute;
+  width: 360px;
+  height: 60px;
+  left: 0px;
+  top: 697px;
+  background: #F0F0F0;
+  border: #318516;
+  border-radius: 20px;
+}
+
+/* Gallery Button (Right Frame) */
+.gallery-button {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  left: 255px;
+  top: 564px;
+  cursor: pointer;
+}
+.gallery-button .gallery-vector {
+  position: absolute;
+  left: 8.33%;
+  right: 8.33%;
+  top: 8.33%;
+  bottom: 8.33%;
+  background: url("gallery.png");
+}
+
+/* Ellipse 1: Capture Button */
+.ellipse1 {
+  box-sizing: border-box;
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  left: 156px;
+  top: 555px;
+  background: #FFFFFF;
+  border: 3px solid #318516;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Capture Text */
+.capture-text {
+  position: absolute;
+  width: 48px;
+  height: 15px;
+  left: 156px;
+  top: 611px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Gallery Text */
+.gallery-text {
+  position: absolute;
+  width: 36px;
+  height: 12px;
+  left: 252px;
+  top: 605px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* -------------------- Record Screen Specific Additional CSS -------------------- */
+
+/* Record Title */
+.record-text {
+  position: absolute;
+  width: 85px;
+  height: 29px;
+  left: 20px;
+  top: 64px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Rectangle 4: Camera Preview Area */
+.rectangle4 {
+  position: absolute;
+  width: 317px;
+  height: 272px;
+  left: 20px;
+  top: 226px;
+  background: url("IMG_1744.png");
+  background-size: cover;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.webcam-view,
+.captured-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Ellipse 1: Capture Button */
+.ellipse1 {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  left: 156px;
+  top: 555px;
+  background: #FFFFFF;
+  border: 3px solid #318516;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Capture Text */
+.capture-text {
+  position: absolute;
+  width: 48px;
+  height: 15px;
+  left: 156px;
+  top: 611px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Gallery Button */
+.gallery-btn {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  left: 255px;
+  top: 564px;
+  cursor: pointer;
+}
+.gallery-btn::before {
+  content: "";
+  position: absolute;
+  left: 8.33%;
+  right: 8.33%;
+  top: 8.33%;
+  bottom: 8.33%;
+  background: url("gallery.png");
+}
+
+/* Gallery Text */
+.gallery-text {
+  position: absolute;
+  width: 36px;
+  height: 12px;
+  left: 252px;
+  top: 605px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Process Button (replacing flash) */
+.process-btn {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  left: 75px;  /* same position as previous flash-btn */
+  top: 564px;
+  cursor: pointer;
+  background: #434343;
+}
+.process-btn::before {
+  content: "";
+  position: absolute;
+  left: 5.73%;
+  right: 11.67%;
+  top: 8.33%;
+  bottom: 5.73%;
+  background: #318516;
+}
+
+/* Process Text */
+.process-text {
+  position: absolute;
+  width: 46px;
+  height: 12px;
+  left: 67px;
+  top: 605px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
