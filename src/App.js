@@ -9,7 +9,7 @@ const Home = () => {
     <div className="screen-container">
       <div className="header"></div>
       <div className="logo"></div>
-      <button className="btn sign-up" onClick={() => navigate("/signup-method")}>
+      <button className="btn sign-up" onClick={() => navigate("/signup-email")}>
         Sign Up
       </button>
       <button className="btn log-in" onClick={() => navigate("/login")}>
@@ -23,62 +23,43 @@ const Home = () => {
   );
 };
 
-const SignupMethod = () => {
+
+const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
   return (
-    <div className="screen-container">
-      <div className="header"></div>
-      
-      {/* Back Arrow */}
-      <div className="back-arrow" onClick={() => navigate("/")}>
-        <div className="vector"></div>
+    <div className="login-container">
+      <h2 className="login-title">Log in</h2>
+
+      <div className="input-container">
+        <label className="input-label">Email</label>
+        <input
+          type="email"
+          className="login-input"
+          placeholder="Enter your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </div>
-      
-      {/* Title */}
-      <div className="create-account" style={{ textAlign: "center", marginTop: "100px" }}>
-        Sign Up
+
+      <div className="input-container">
+        <label className="input-label">Password</label>
+        <input
+          type="password"
+          className="login-input"
+          placeholder="Enter your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
       </div>
-      
-      {/* Buttons Container */}
-      <div
-        style={{
-          marginTop: "50px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "20px",
-          padding: "0 20px",
-          width: "100%"
-        }}
-      >
-        <button
-          className="btn"
-          style={{
-            width: "100%",
-            background: "#318516",
-            color: "#FFF",
-            borderRadius: "20px"
-          }}
-          onClick={() => navigate("/signup-email")}
-        >
-          Sign up using Email
-        </button>
-        <button
-          className="btn"
-          style={{
-            width: "100%",
-            background: "#FFF",
-            color: "#318516",
-            border: "2px solid #318516",
-            borderRadius: "20px"
-          }}
-          onClick={() => navigate("/signup-password")}
-        >
-          Sign up using Google
-        </button>
-      </div>
-      
-      <div className="footer"></div>
+
+      <button className="login-button" onClick={() => navigate("/dashboard")}>
+        Log in
+      </button>
+
+      <p className="forgot-password">Forgot password?</p>
     </div>
   );
 };
@@ -617,7 +598,7 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/signup-method" element={<SignupMethod />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/signup-email" element={<SignupEmail />} />
           <Route path="/signup-name" element={<SignupName />} />
           <Route path="/signup-password" element={<SignupPassword />} />
