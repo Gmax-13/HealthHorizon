@@ -367,6 +367,31 @@
   overflow: hidden;
 }
 
+.week-days-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 100px 0;
+}
+
+.day-circle {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #ddd;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.active {
+  background-color: #318516 !important; /* Green highlight for the current day */
+  color: white;
+}
+
 /* Each circle is 26×26, absolutely placed at top:100px. 
    The day letter is 12px, placed at top:79px. 
    We replicate the Figma positions. */
@@ -1037,18 +1062,12 @@
   height: 237px;
   left: 20px;
   top: 151px;
-  background: #D9D9D9;
-  border-radius: 20px;
-}
-
-/* Recipe Main Image (vada-pav-9) */
-.recipe-main-bg {
-  position: absolute;
-  width: 299px;
-  height: 181px;
+  /*background: #D9D9D9;*/
   background: url("salad.png");
+  background-repeat: no-repeat;
+  background-position: center center;
   background-size: cover;
-  border-radius: 18px;
+  border-radius: 20px;
 }
 
 /* Recipe Title ("Vada Pav") */
@@ -1057,15 +1076,19 @@
   width: 74px;
   height: 19px;
   left: 37px;
-  top: 169px;
+  top: 195px;
   font-family: 'Inter', sans-serif;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 20px;
   line-height: 19px;
   display: flex;
   align-items: center;
   letter-spacing: 0.25px;
   color: #000000;
+  background-color: #ffffff;
+  border-radius: 7px;
+  flex-wrap: nowrap;
+  justify-content: center;
 }
 
 /* Recipe Grid for Additional Items */
@@ -1655,6 +1678,153 @@
   align-items: center;
   letter-spacing: 0.25px;
   color: #000000;
+}
+
+/* ---------- Review Overlay (Figma style) ---------- */
+.review-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 360px;
+  height: 800px;
+  background: rgba(255, 255, 255); /* Slightly translucent overlay */
+  z-index: 999; /* Above everything else */
+}
+
+/* Fade-in animation */
+.fade-in {
+  animation: fadeIn 0.5s forwards;
+}
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Title: "Review captured items" (top:64, left:20) */
+.review-title {
+  position: absolute;
+  width: 273px;
+  height: 29px;
+  left: 20px;
+  top: 64px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Close Button (X) (top:64, left:312) */
+.review-close {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  left: 312px;
+  top: 64px;
+  font-size: 24px;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+  color: #434343;
+}
+
+/* Time "8:00 PM" (top:175, left:42) */
+.review-time {
+  position: absolute;
+  left: 42px;
+  top: 175px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Outer Gray Box (width=320, height=364, left=20, top=151) */
+.review-box {
+  position: absolute;
+  width: 320px;
+  height: 364px;
+  left: 20px;
+  top: 151px;
+  background: #D9D9D9;
+  border-radius: 20px;
+}
+
+/* Resized captured image (width=291, height=132, left=36, top=209) */
+.review-image {
+  position: absolute;
+  width: 291px;
+  height: 132px;
+  left: 15px;
+  top: 50px;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+/* "Calories" (left=42, top=362) */
+.review-label-cal {
+  position: absolute;
+  left: 42px;
+  top: 210px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  color: #000000;
+  margin: 0;
+}
+.review-value-cal {
+  position: absolute;
+  left: 45px;
+  top: 233px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #434343;
+  margin: 0;
+}
+
+/* "Fats" (left=42, top=409) */
+.review-label-fat {
+  position: absolute;
+  left: 42px;
+  top: 255px;
+  font-weight: 500;
+  font-size: 20px;
+  color: #000000;
+  margin: 0;
+}
+.review-value-fat {
+  position: absolute;
+  left: 45px;
+  top: 275px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #434343;
+  margin: 0;
+}
+
+/* "Vitamins" (left=42, top=456) */
+.review-label-vit {
+  position: absolute;
+  left: 42px;
+  top: 295px;
+  font-weight: 500;
+  font-size: 20px;
+  color: #000000;
+  margin: 0;
+}
+.review-value-vit {
+  position: absolute;
+  left: 45px;
+  top: 313px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #434343;
+  margin: 0;
 }
 
 /* ------------------Login Page Container -------------------------*/

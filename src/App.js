@@ -340,15 +340,38 @@ const WeekDays = () => {
 const Dashboard = () => {
   const navigate = useNavigate();
   const [dateString, setDateString] = useState("");
+  const [weekDays, setWeekDays] = useState([]);
 
-  // Update the main date label on mount
   useEffect(() => {
     const today = new Date();
+    
+    // Set the main date title
     const weekday = today.toLocaleDateString("en-US", { weekday: "long" });
     const day = today.getDate();
     const month = today.toLocaleDateString("en-US", { month: "long" });
     const ordinal = getOrdinal(day);
     setDateString(`${weekday}, ${day}${ordinal} ${month}`);
+
+    // Generate days for the current week
+    const generateWeekDays = () => {
+      const week = [];
+      const startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - today.getDay()); // Start from Sunday
+      
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(startOfWeek);
+        date.setDate(startOfWeek.getDate() + i);
+        
+        week.push({
+          name: date.toLocaleDateString("en-US", { weekday: "short" }), // Mon, Tue, etc.
+          number: date.getDate(), // 1, 2, 3, ...
+          isToday: date.toDateString() === today.toDateString(), // Check if it's today
+        });
+      }
+      return week;
+    };
+
+    setWeekDays(generateWeekDays());
   }, []);
 
   const getOrdinal = (n) => {
@@ -367,7 +390,7 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      {/* Dynamic Main Date Title */}
+      {/* Main Date Title */}
       <div className="dashboard-date-title">{dateString}</div>
       
       {/* Profile Icon */}
@@ -378,9 +401,16 @@ const Dashboard = () => {
         onClick={() => navigate("/Profile")}
         style={{ cursor: "pointer" }}
       />
-      
+
       {/* Dynamic Day Circles */}
-      <WeekDays />
+      <div className="week-days-container">
+        {weekDays.map((day, index) => (
+          <div key={index} className={`day-circle ${day.isToday ? "active" : ""}`}>
+            <div className="day-name">{day.name}</div>
+            <div className="day-number">{day.number}</div>
+          </div>
+        ))}
+      </div>
 
       {/* Calorie Ring */}
       <div className="calorie-ring"></div>
@@ -398,7 +428,7 @@ const Dashboard = () => {
       <div className="macro-circle-3"></div>
       <div className="macro-text-3">0 g</div>
       
-      {/* Calorie Tracking (Streak) Box */}
+      {/* Calorie Tracking (Streak) */}
       <div className="calorie-streak-box"></div>
       <div className="calorie-tracking-label">Calorie tracking</div>
       <div className="calorie-streak-text">Streak</div>
@@ -424,9 +454,9 @@ const Dashboard = () => {
             <div className="nav-icon plan-icon"></div>
             <div className="nav-label">Plan</div>
           </div>
+        </div>
       </div>
-      </div>
-      </div>
+    </div>
   );
 };
 
@@ -519,8 +549,8 @@ const Record = () => {
   const webcamRef = useRef(null);
   const fileInputRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
+  const [showReviewBox, setShowReviewBox] = useState(false);
 
-  // Capture photo from webcam, trigger a download (simulate saving), and display it.
   const capturePhoto = () => {
     if (webcamRef.current) {
       const imageSrc = webcamRef.current.getScreenshot();
@@ -529,7 +559,6 @@ const Record = () => {
     }
   };
 
-  // Trigger a download of the captured image (simulate saving to gallery)
   const downloadImage = (dataUrl) => {
     const link = document.createElement("a");
     link.href = dataUrl;
@@ -539,14 +568,12 @@ const Record = () => {
     document.body.removeChild(link);
   };
 
-  // Open the file picker to select an image from the device (gallery).
   const openGallery = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
 
-  // When a file is chosen, read it and display it in the preview area.
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -558,21 +585,19 @@ const Record = () => {
     }
   };
 
-  // Process button functionality: show a popup.
   const processImage = () => {
     alert("Image is being processed! Please wait.");
-    // Add additional processing logic here if needed.
+    setTimeout(() => setShowReviewBox(true), 300); // Delay to simulate fade-in effect
+  };
+
+  const closeReviewBox = () => {
+    setShowReviewBox(false);
   };
 
   return (
     <div className="record-screen">
-      <div className="header"></div>
-      <div className="footer"></div>
-      
-      {/* Record Title */}
       <p className="record-text">Record</p>
-      
-      {/* Rectangle 4: Camera Preview */}
+
       <div className="rectangle4">
         {capturedImage ? (
           <img src={capturedImage} alt="Captured" className="captured-image" />
@@ -586,22 +611,16 @@ const Record = () => {
           />
         )}
       </div>
-      
-      {/* Ellipse 1: Capture Button */}
+
       <div className="ellipse1" onClick={capturePhoto}></div>
-      
-      {/* Capture Label */}
       <p className="capture-text">Capture</p>
-      
-      {/* Process Button (replacing flash) */}
+
       <div className="process-btn" onClick={processImage}></div>
       <p className="process-text">Process</p>
-      
-      {/* Gallery Button */}
+
       <div className="gallery-btn" onClick={openGallery}></div>
       <p className="gallery-text">Gallery</p>
-      
-      {/* Hidden file input for gallery selection */}
+
       <input
         type="file"
         accept="image/*"
@@ -610,7 +629,6 @@ const Record = () => {
         onChange={handleFileChange}
       />
 
-      {/* Bottom Navigation */}
       <div className="nav-bar">
         <div className="nav-item" onClick={() => navigate("/dashboard")}>
           <div className="nav-icon summary-icon"></div>
@@ -629,9 +647,37 @@ const Record = () => {
           <div className="nav-label">Plan</div>
         </div>
       </div>
+
+      {/* Review Overlay Inside the Main Wrapper */}
+      {showReviewBox && (
+        <div className="review-overlay fade-in">
+          <h2 className="review-title">Review captured items</h2>
+          <div className="review-close" onClick={closeReviewBox}>✕</div>
+
+          <p className="review-time">8:00 PM</p>
+
+          <div className="review-box">
+            <img
+              src={capturedImage || "/IMG_1744.jpg"}
+              alt="review"
+              className="review-image"
+            />
+
+            <p className="review-label-cal">Calories</p>
+            <p className="review-value-cal">000 cal</p>
+
+            <p className="review-label-fat">Fats</p>
+            <p className="review-value-fat">000 cal</p>
+
+            <p className="review-label-vit">Vitamins</p>
+            <p className="review-value-vit">000 cal</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
 
 const Plan = () => {
   const navigate = useNavigate();
