@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import Webcam from "react-webcam";
+import { useEffect } from "react";
 import "./styles.css";
 
 const Home = () => {
@@ -301,41 +302,175 @@ const SignupMeasurements = () => {
   );
 };
 
+// A component to compute and render the 7 day circles dynamically.
+const WeekDays = () => {
+  const [weekDays, setWeekDays] = useState([]);
+
+  useEffect(() => {
+    const today = new Date();
+    // Get current day index (0=Sunday, 1=Monday, etc.)
+    const currentDay = today.getDay();
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const dayDate = new Date();
+      // Adjust so that the week starts on Sunday
+      dayDate.setDate(today.getDate() - currentDay + i);
+      // Get short weekday name (we only need the first letter)
+      const dayLetter = dayDate.toLocaleDateString("en-US", { weekday: "short" }).charAt(0);
+      const dayNumber = dayDate.getDate();
+      days.push({ dayLetter, dayNumber });
+    }
+    setWeekDays(days);
+  }, []);
+
+  return (
+    <>
+      {weekDays.map((day, index) => (
+        <React.Fragment key={index}>
+          {/* Each element uses a class with an index (e.g., day-circle-1, day-label-1, day-number-1) */}
+          <div className={`day-circle-${index + 1}`}></div>
+          <div className={`day-label-${index + 1}`}>{day.dayLetter}</div>
+          <div className={`day-number-${index + 1}`}>{day.dayNumber}</div>
+        </React.Fragment>
+      ))}
+    </>
+  );
+};
+
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [dateString, setDateString] = useState("");
+
+  // Update the main date label on mount
+  useEffect(() => {
+    const today = new Date();
+    const weekday = today.toLocaleDateString("en-US", { weekday: "long" });
+    const day = today.getDate();
+    const month = today.toLocaleDateString("en-US", { month: "long" });
+    const ordinal = getOrdinal(day);
+    setDateString(`${weekday}, ${day}${ordinal} ${month}`);
+  }, []);
+
+  const getOrdinal = (n) => {
+    if (n > 3 && n < 21) return "th";
+    switch (n % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
   return (
     <div className="dashboard-container">
-      <div className="header"></div>
-      <div className="footer"></div>
+      {/* Dynamic Main Date Title */}
+      <div className="dashboard-date-title">{dateString}</div>
       
-      <div className="date-label">Monday, 17th February</div>
-      <div className="summary-heading">Summary</div>
+      {/* Profile Icon */}
+      <img
+        className="profile-icon"
+        src="/profile.png"
+        alt="Profile"
+        onClick={() => navigate("/Profile")}
+        style={{ cursor: "pointer" }}
+      />
       
-      <div className="meal-plot">
-        <p className="plot-placeholder">[Meals Log vs Calorie Count Plot]</p>
+      {/* Dynamic Day Circles */}
+      <WeekDays />
+
+      {/* Calorie Ring */}
+      <div className="calorie-ring"></div>
+      
+      {/* Macro Labels */}
+      <div className="macros-label-carbs">Carbs</div>
+      <div className="macros-label-protein">Protein</div>
+      <div className="macros-label-fat">Fat</div>
+      
+      {/* Macro Circles and Text */}
+      <div className="macro-circle-1"></div>
+      <div className="macro-text-1">0 g</div>
+      <div className="macro-circle-2"></div>
+      <div className="macro-text-2">0 g</div>
+      <div className="macro-circle-3"></div>
+      <div className="macro-text-3">0 g</div>
+      
+      {/* Calorie Tracking (Streak) Box */}
+      <div className="calorie-streak-box"></div>
+      <div className="calorie-tracking-label">Calorie tracking</div>
+      <div className="calorie-streak-text">Streak</div>
+      <div className="streak-number">90</div>
+      <div className="streak-days">Days</div>
+
+      {/* Bottom Navigation */}
+      <div className="nav-container">
+        <div className="nav-bar">
+          <div className="nav-item" onClick={() => navigate("/dashboard")}>
+            <div className="nav-icon summary-icon"></div>
+            <div className="nav-label">Summary</div>
+          </div>
+          <div className="nav-item" onClick={() => navigate("/record")}>
+            <div className="nav-icon record-icon"></div>
+            <div className="nav-label">Record</div>
+          </div>
+          <div className="nav-item" onClick={() => navigate("/recipe")}>
+            <div className="nav-icon recipe-icon"></div>
+            <div className="nav-label">Recipe</div>
+          </div>
+          <div className="nav-item" onClick={() => navigate("/plan")}>
+            <div className="nav-icon plan-icon"></div>
+            <div className="nav-label">Plan</div>
+          </div>
       </div>
-      
-      <img className="profile-icon" src="/profile.png" alt="Profile" />
-      
-      <div className="nav-bar">
-        <div className="nav-item" onClick={() => navigate("/dashboard")}>
-          <div className="nav-icon summary-icon"></div>
-          <div className="nav-label">Summary</div>
-        </div>
-        <div className="nav-item" onClick={() => navigate("/record")}>
-          <div className="nav-icon record-icon"></div>
-          <div className="nav-label">Record</div>
-        </div>
-        <div className="nav-item" onClick={() => navigate("/recipe")}>
-          <div className="nav-icon recipe-icon"></div>
-          <div className="nav-label">Recipe</div>
-        </div>
-        <div className="nav-item" onClick={() => navigate("/plan")}>
-          <div className="nav-icon plan-icon"></div>
-          <div className="nav-label">Plan</div>
-        </div>
       </div>
-    </div>
+      </div>
+  );
+};
+
+const Profile = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="profile-container">
+      {/* Back Button */}
+      <div className="back-arrow" onClick={() => navigate("/dashboard")}>
+        <div className="vector"></div>
+      </div>
+
+      {/* Profile Heading */}
+      <h1 className="profile-title">Profile</h1>
+
+      {/* Profile Image */}
+      <div className="profile-image">
+        <img src="/profile.png" alt="User Profile" />
+      </div>
+
+      {/* User Information */}
+      <h2 className="user-name">John Doe</h2>
+      <div className="user-details">
+        <span>19 years</span> <span>170 cm</span> <span>55 kg</span>
+      </div>
+
+      {/* Edit Profile */}
+      <p className="edit-profile">Edit profile</p>
+
+      {/* Streak Card */}
+      <div className="streak-card">
+        <p className="streak-subtitle">Calorie tracking</p>
+        <p className="streak-title">Streak<span> </span>
+          <span>90</span> Days
+        </p>
+      </div>
+
+      {/* Invite Friends Card */}
+      <div className="invite-card">
+        <p>Invite your friends to Health Horizon</p>
+        <span className="share-icon">🔗</span>
+      </div>
+      </div>
   );
 };
 
@@ -500,72 +635,90 @@ const Record = () => {
 
 const Plan = () => {
   const navigate = useNavigate();
-  const [selectedDay, setSelectedDay] = useState("today");
+
+  // State to store the day names and date numbers
+  const [yesterdayName, setYesterdayName] = useState("");
+  const [todayName, setTodayName] = useState("");
+  const [tomorrowName, setTomorrowName] = useState("");
+  const [yesterdayDate, setYesterdayDate] = useState(0);
+  const [todayDate, setTodayDate] = useState(0);
+  const [tomorrowDate, setTomorrowDate] = useState(0);
+
+  useEffect(() => {
+    const now = new Date();
+
+    // Calculate numeric dates for yesterday, today, tomorrow
+    const day = now.getDate();
+    setTodayDate(day);
+    setYesterdayDate(day - 1);
+    setTomorrowDate(day + 1);
+
+    // Calculate day-of-week names
+    const dayIndex = now.getDay(); // 0=Sun,1=Mon,...6=Sat
+    const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+    // 'todayName' is dayNames[dayIndex]
+    // 'yesterdayName' is dayNames[(dayIndex + 6) % 7]
+    // 'tomorrowName' is dayNames[(dayIndex + 1) % 7]
+    setTodayName(dayNames[dayIndex]);
+    setYesterdayName(dayNames[(dayIndex + 6) % 7]);
+    setTomorrowName(dayNames[(dayIndex + 1) % 7]);
+  }, []);
 
   return (
     <div className="plan-screen">
-      {/* Plan Header */}
-      <p className="plan">Plan</p>
+      {/* Title: Plan */}
+      <h1 className="plan-title">Plan</h1>
 
-      {/* Day Buttons */}
-      <div className="day-buttons">
-        <button
-          className={`day-button yesterday ${selectedDay === "yesterday" ? "active" : ""}`}
-          onClick={() => setSelectedDay("yesterday")}
-        >
-          Yesterday
-        </button>
-        <button
-          className={`day-button today ${selectedDay === "today" ? "active" : ""}`}
-          onClick={() => setSelectedDay("today")}
-        >
-          Today
-        </button>
-        <button
-          className={`day-button tomorrow ${selectedDay === "tomorrow" ? "active" : ""}`}
-          onClick={() => setSelectedDay("tomorrow")}
-        >
-          Tomorrow
-        </button>
-      </div>
+      {/* Gray rectangle for day selection */}
+      <div className="plan-day-box"></div>
+      {/* Green highlight behind "Today" */}
+      <div className="plan-day-highlight"></div>
+      
+      {/* Dynamic day names */}
+      <p className="plan-day-yesterday">{yesterdayName}</p>
+      <p className="plan-day-today">{todayName}</p>
+      <p className="plan-day-tomorrow">{tomorrowName}</p>
 
-      {/* Dinner Section */}
-      <p className="group7 dinner">Dinner</p>
-      <div className="group8 dinner-desc">
-        <p>Chapatti & Rice 1 bowl • about 115 calorie</p>
-      </div>
-      <div
-        className="roti_image"
-        style={{
-          backgroundImage: 'url("roti_or_rice_what_is_better1.png")'
-        }}
-      ></div>
+      {/* Dynamic day numbers */}
+      <p className="plan-day-2">{yesterdayDate}</p>
+      <p className="plan-day-3">{todayDate}</p>
+      <p className="plan-day-4">{tomorrowDate}</p>
 
-      {/* Additional Groups / Elements from the export */}
-      <button className="group6">+ADD</button>
+      {/* Gray rectangle for calorie progress */}
+      <div className="plan-calorie-box"></div>
+      {/* White background progress bar */}
+      <div className="plan-calorie-bg"></div>
+      {/* Green progress bar */}
+      <div className="plan-calorie-fill"></div>
+      <p className="plan-calorie-count">200 of 1800 Calories</p>
+
       {/* Breakfast Section */}
-      <p className="group7 breakfast">Breakfast</p>
-      <div className="group8 breakfast-desc">
-        <p>Upma 1 bowl • about 115 calories</p>
-      </div>
-      <div
-        className="best_upma_image"
-        style={{
-          backgroundImage: 'url("Best-South-Indian-Rava-Upma-Recipe.png")'
-        }}
-      ></div>
+      <h2 className="plan-breakfast-title">Breakfast</h2>
+      <p className="plan-breakfast-desc">Upma 1 bowl • about 115 calories</p>
+      <img
+        src="/Best-South-Indian-Rava-Upma-Recipe.png"
+        alt="Upma"
+        className="plan-breakfast-img"
+      />
 
       {/* Lunch Section */}
-      <p className="group7 lunch">Lunch</p>
-      <div className="group8 lunch-desc">
-        <p>Egg fried rice 1 plate • about 400 calorie</p>
-      </div>
-      <div
-        className="easy_rice_image"
-        style={{
-          backgroundImage: 'url("Easy-Egg-fried-rice-2.png")'
-        }}
-      ></div>
+      <h2 className="plan-lunch-title">Lunch</h2>
+      <p className="plan-lunch-desc">Egg fried rice 1 plate • about 400 calories</p>
+      <img
+        src="/Easy-Egg-fried-rice-2.png"
+        alt="Egg fried rice"
+        className="plan-lunch-img"
+      />
+
+      {/* Dinner Section */}
+      <h2 className="plan-dinner-title">Dinner</h2>
+      <p className="plan-dinner-desc">Chapatti & Rice 1 bowl • about 115 calorie</p>
+      <img
+        src="/roti_or_rice_what_is_better1.png"
+        alt="Chapatti & Rice"
+        className="plan-dinner-img"
+      />
 
       {/* Bottom Navigation */}
       <div className="nav-container">
@@ -606,6 +759,7 @@ const App = () => {
           <Route path="/signup-age" element={<SignupAge />} />
           <Route path="/signup-measurements" element={<SignupMeasurements />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/Profile" element={<Profile />} />
           <Route path="/recipe" element={<Recipe />} />
           <Route path="/record" element={<Record />} />
           <Route path="/plan" element={<Plan />} />
