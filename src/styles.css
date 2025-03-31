@@ -159,7 +159,7 @@
   width: 120px;
   height: 20px;
   left: 41px;
-  top: 342px;
+  top: 338px;
   font-family: 'Inter', sans-serif;
   font-weight: 400;
   font-size: 11px;
@@ -177,7 +177,7 @@
   width: 320px;
   height: 40px;
   left: 20px;
-  top: 362px;
+  top: 298px;
   background: #FFFFFF;
   border: 2px solid #318516;
   border-radius: 20px;
@@ -356,6 +356,120 @@
   color: #4A4A4A;
   left: 306px;
   top: 270px;
+}
+
+.signup-goal-screen {
+  position: relative;
+  width: 360px;
+  height: 800px;
+  background: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Title: "What’s your goal?" at (32, 261) */
+.goal-title {
+  position: absolute;
+  width: 176px;
+  height: 20px;
+  left: 32px;
+  top: 261px;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Lose Box (width=150, height=90, left=20, top=334) */
+.goal-box {
+  position: absolute;
+  width: 150px;
+  height: 90px;
+  background: #D9D9D9;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* On selection, highlight the box if you want */
+.goal-box.selected {
+  outline: 3px solid #318516; /* optional highlight */
+}
+
+/* Lose Box specifically */
+.lose-box {
+  left: 20px;
+  top: 334px;
+  background-image: url("lose.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* "Lose weight" text at (49,400) */
+.lose-text {
+  position: absolute;
+  width: 91px;
+  height: 20px;
+  left: 33px;
+  top: 68px;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Gain Box (width=150, height=90, left=190, top=334) */
+.gain-box {
+  left: 190px;
+  top: 334px;
+  background-image: url("gain.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* "Gain weight" text at (220,400) */
+.gain-text {
+  position: absolute;
+  width: 89px;
+  height: 20px;
+  left: 33px;
+  top: 68px;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Next Button at (20,477) size=320x40, green, radius=20 */
+.goal-next-btn {
+  position: absolute;
+  width: 320px;
+  height: 40px;
+  left: 20px;
+  top: 477px;
+  background: #318516;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* "Next" text at (163,487) */
+.goal-next-text {
+  position: absolute;
+  width: 35px;
+  height: 20px;
+  left: 163px;
+  top: 487px;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #FFFFFF;
+  margin: 0;
+  cursor: pointer;
 }
 
 /* -------------------- Dashboard Specific -------------------- */
@@ -970,57 +1084,117 @@
 
 /* -------------------- Updated Gender Icons Using Images (with Radio Buttons) -------------------- */
 .gender-container {
-  position: absolute;
-  top: 150px;
-  width: 100%;
-  text-align: center;
-}
-.gender-title {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 18px;
-  margin-bottom: 20px;
-  color: #000000;
-}
-.gender-option {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 15px;
-  cursor: pointer;
-}
-.gender-option input {
-  appearance: none;
-  width: 18px;
-  height: 18px;
-  border: 2px solid #318516;
-  border-radius: 50%;
-  margin-right: 8px;
-  cursor: pointer;
   position: relative;
+  width: 360px;
+  height: 800px;
+  background: #FFFFFF;
+  font-family: 'Inter', sans-serif;
 }
-.gender-option input:checked::before {
-  content: "";
-  width: 10px;
-  height: 10px;
-  background: #318516;
-  border-radius: 50%;
+
+/* Title: "What’s your goal?" at (32, 261) */
+.gender-title {
   position: absolute;
-  top: 3px;
-  left: 3px;
+  width: 220px;
+  height: 20px;
+  left: 32px;
+  top: 261px;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
 }
-.gender-icon {
-  width: 40px;
-  height: 40px;
-  background-size: contain;
-  background-repeat: no-repeat;
+
+/* Lose Box (width=150, height=90, left=20, top=334) */
+.gender-box {
+  position: absolute;
+  width: 150px;
+  height: 90px;
+  background: #D9D9D9;
+  border-radius: 10px;
+  cursor: pointer;
 }
-.male-icon {
+
+/* On selection, highlight the box if you want */
+.gender-box.selected {
+  outline: 3px solid #318516; /* optional highlight */
+}
+
+/* Lose Box specifically */
+.male-box {
+  left: 20px;
+  top: 334px;
   background-image: url("male-icon.png");
+  background-repeat: no-repeat;
+  background-position: center center;
 }
-.female-icon {
+
+/* "Lose weight" text at (49,400) */
+.male-text {
+  position: absolute;
+  width: 55px;
+  height: 20px;
+  left: 56px;
+  top: 68px;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Gain Box (width=150, height=90, left=190, top=334) */
+.female-box {
+  left: 190px;
+  top: 334px;
   background-image: url("female-icon.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* "Gain weight" text at (220,400) */
+.female-text {
+  position: absolute;
+  width: 55px;
+  height: 20px;
+  left: 50px;
+  top: 68px;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Next Button at (20,477) size=320x40, green, radius=20 */
+.gender-next-btn {
+  position: absolute;
+  width: 320px;
+  height: 40px;
+  left: 20px;
+  top: 477px;
+  background: #318516;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* "Next" text at (163,487) */
+.gender-next-text {
+  position: absolute;
+  width: 35px;
+  height: 20px;
+  left: 163px;
+  top: 487px;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #FFFFFF;
+  margin: 0;
+  cursor: pointer;
 }
 
 /* -------------------- Recipe Screen Specific -------------------- */

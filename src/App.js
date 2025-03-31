@@ -176,49 +176,41 @@ const SignupPassword = () => {
 const SignupGender = () => {
   const navigate = useNavigate();
   const [gender, setGender] = useState("");
-  
-  const handleNext = () => {
-    if (gender) {
-      navigate("/signup-age");
-    } else {
-      alert("Please select your gender");
-    }
-  };
 
-  return (
-    <div className="screen-container">
-      <div className="header"></div>
-      <div className="footer"></div>
-      <div className="back-arrow" onClick={() => navigate("/signup-password")}>
-        <div className="vector"></div>
+  const handleNext = () => {
+      if (gender) {
+        navigate("/signup-age");
+      } else {
+        alert("Please select your gender");
+      }
+    };
+
+    return (
+        <div className="gender-container">
+          <div className="back-arrow" onClick={() => navigate("/signup-password")}>
+          <div className="vector"></div>
+        </div>
+          <p className="gender-title">What’s your biological gender?</p>
+
+      {/* Box for Male */}
+      <div
+        className={`gender-box male-box ${gender === "male" ? "selected" : ""}`}
+        onClick={() => setGender("male")}
+      >
+        <p className="male-text">Male</p>
       </div>
-      <div className="gender-container">
-        <p className="gender-title">What’s your biological gender?</p>
-        <label className="gender-option">
-          <input
-            type="radio"
-            name="gender"
-            value="male"
-            checked={gender === "male"}
-            onChange={() => setGender("male")}
-          />
-          <span className="gender-icon male-icon"></span>
-          <span>Male</span>
-        </label>
-        <label className="gender-option">
-          <input
-            type="radio"
-            name="gender"
-            value="female"
-            checked={gender === "female"}
-            onChange={() => setGender("female")}
-          />
-          <span className="gender-icon female-icon"></span>
-          <span>Female</span>
-        </label>
-        <div className="next-btn" onClick={handleNext}></div>
-        <div className="next-text" onClick={handleNext}>Next</div>
+
+      {/* Box for Female */}
+      <div
+        className={`gender-box female-box ${gender === "female" ? "selected" : ""}`}
+        onClick={() => setGender("female")}
+      >
+        <p className="female-text">Female</p>
       </div>
+
+      {/* Next Button */}
+      <div className="gender-next-btn" onClick={handleNext}></div>
+      <p className="gender-next-text" onClick={handleNext}>Next</p>
     </div>
   );
 };
@@ -257,7 +249,7 @@ const SignupMeasurements = () => {
       alert("Please fill in all measurement fields");
       return;
     }
-    navigate("/dashboard");
+    navigate("/signup-goal");
   };
 
   return (
@@ -298,6 +290,53 @@ const SignupMeasurements = () => {
       <div className="next-btn-measure" onClick={handleNext}></div>
       <div className="next-text-measure" onClick={handleNext}>Next</div>
       <div className="footer"></div>
+    </div>
+  );
+};
+
+const SignupGoal = () => {
+  const navigate = useNavigate();
+  const [goal, setGoal] = useState("");
+
+  // Handle Next
+  const handleNext = () => {
+    if (!goal) {
+      alert("Please select a goal");
+      return;
+    }
+    // Navigate to next route or summary
+    navigate("/dashboard"); // or your desired route
+  };
+
+  return (
+    <div className="signup-goal-screen">
+      {/* Back Arrow */}
+      <div className="back-arrow" onClick={() => navigate("/signup-measurements")}>
+        <div className="vector"></div>
+      </div>
+
+      {/* Title */}
+      <h1 className="goal-title">What’s your goal?</h1>
+
+      {/* Box for Lose Weight */}
+      <div
+        className={`goal-box lose-box ${goal === "lose" ? "selected" : ""}`}
+        onClick={() => setGoal("lose")}
+      >
+        <p className="lose-text">Lose weight</p>
+      </div>
+
+      {/* Box for Gain Weight */}
+      <div
+        className={`goal-box gain-box ${goal === "gain" ? "selected" : ""}`}
+        onClick={() => setGoal("gain")}
+      >
+        <p className="gain-text">Gain weight</p>
+      </div>
+
+      {/* Next Button */}
+      <div className="goal-next-btn" onClick={handleNext}></div>
+      <p className="goal-next-text" onClick={handleNext}>Next</p>
     </div>
   );
 };
@@ -804,6 +843,7 @@ const App = () => {
           <Route path="/signup-gender" element={<SignupGender />} />
           <Route path="/signup-age" element={<SignupAge />} />
           <Route path="/signup-measurements" element={<SignupMeasurements />} />
+          <Route path="/signup-goal" element={<SignupGoal />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/Profile" element={<Profile />} />
           <Route path="/recipe" element={<Recipe />} />
