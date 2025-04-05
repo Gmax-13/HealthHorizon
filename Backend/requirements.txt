@@ -1,0 +1,4 @@
+Flask
+flask-cors
+psycopg2
+werkzeug
