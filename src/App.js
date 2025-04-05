@@ -26,15 +26,40 @@ const Home = () => {
   );
 };
 
-
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    setError(""); // Clear previous errors
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("token", data.token); // Store JWT token
+        navigate("/dashboard"); // Redirect to dashboard
+      } else {
+        setError(data.message || "Login failed. Please try again.");
+      }
+    } catch (err) {
+      setError("Network error. Please try again later.");
+    }
+  };
 
   return (
     <div className="login-container">
       <h2 className="login-title">Log in</h2>
+
+      {error && <p className="error-message">{error}</p>}
 
       <div className="input-container">
         <label className="input-label">Email</label>
@@ -58,7 +83,7 @@ const Login = () => {
         />
       </div>
 
-      <button className="login-button" onClick={() => navigate("/dashboard")}>
+      <button className="login-button" onClick={handleLogin}>
         Log in
       </button>
 
@@ -368,7 +393,7 @@ const SignupGoal = () => {
     const finalSignupData = { ...signupData, goal };
 
     try {
-      const response = await fetch("http://localhost:5000/signup", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(finalSignupData),
