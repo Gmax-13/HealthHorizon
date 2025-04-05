@@ -1,0 +1,2176 @@
+/* ---------- Responsive Wrapper ---------- */
+.app-wrapper {
+  width: 360px;
+  height: 800px;
+  margin: 0 auto;
+  position: relative;
+  overflow-y: auto;
+}
+
+@media (max-width: 360px) {
+  .app-wrapper {
+    transform: scale(calc(100vw / 360));
+    transform-origin: top center;
+  }
+}
+
+
+/* Common Screen Container */
+.screen-container {
+  position: relative;
+  width: 360px;
+  height: 800px;
+  background: #FFFFFF;
+  overflow-y: auto;
+  
+}
+
+/* Dashboard Container: override background */
+.dashboard-container {
+  position: relative;
+  width: 360px;
+  height: 800px;
+  background: #F0F0F0;
+  overflow-y: auto;
+}
+
+/* Logo (Home Screen) */
+.logo {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  left: 30px;
+  top: 171px;
+  background: url("Your-paragraph-text.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* -------------------- Common Elements -------------------- */
+
+/* Back Arrow */
+.back-arrow {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  left: 20px;
+  top: 27px;
+  cursor: pointer;
+}
+.vector {
+  position: absolute;
+  left: 18.75%;
+  right: 18.75%;
+  top: 18.75%;
+  bottom: 18.75%;
+  background: url("backarrow.png");
+}
+
+/* Titles (for sign-up screens and dashboard labels) */
+.create-account,
+.age-title,
+.height-title,
+.weight-title,
+.date-label,
+.summary-heading {
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  color: #000000;
+}
+.create-account,
+.age-title,
+.height-title,
+.weight-title {
+  position: absolute;
+  width: 226px;
+  height: 20px;
+  left: 20px;
+  top: 261px;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+}
+.date-label {
+  position: absolute;
+  width: 146px;
+  height: 17px;
+  left: 20px;
+  top: 39px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+}
+.summary-heading {
+  position: absolute;
+  width: 115px;
+  height: 29px;
+  left: 20px;
+  top: 64px;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+}
+
+/* Input Field */
+.email-input {
+  box-sizing: border-box;
+  position: absolute;
+  width: 320px;
+  height: 40px;
+  left: 20px;
+  top: 332px;
+  background: #FFFFFF;
+  border: 2px solid #318516;
+  border-radius: 20px;
+  padding: 0 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #4A4A4A;
+}
+.email-label {
+  box-sizing: border-box;
+  position: absolute;
+  width: 81px;
+  height: 20px;
+  left: 41px;
+  top: 342px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+
+/* Age Label for Dropdown */
+.age-label {
+  position: absolute;
+  width: 120px;
+  height: 20px;
+  left: 41px;
+  top: 338px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+
+/* Age Dropdown Select */
+.age-select {
+  box-sizing: border-box;
+  position: absolute;
+  width: 320px;
+  height: 40px;
+  left: 20px;
+  top: 298px;
+  background: #FFFFFF;
+  border: 2px solid #318516;
+  border-radius: 20px;
+  padding: 0 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #4A4A4A;
+}
+
+/* Next Button (common for sign-up screens) */
+.next-btn {
+  position: absolute;
+  width: 320px;
+  height: 40px;
+  left: 20px;
+  background: #318516;
+  border-radius: 20px;
+  cursor: pointer;
+  top: 410px;
+  z-index: 1;
+}
+.next-text {
+  position: absolute;
+  width: 33px;
+  height: 20px;
+  left: 163px;
+  top: 420px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #FFFFFF;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* Next Button for Measurements Screen */
+.next-btn-measure {
+  position: absolute;
+  width: 320px;
+  height: 40px;
+  left: 20px;
+  background: #318516;
+  border-radius: 20px;
+  cursor: pointer;
+  top: 568px;
+  z-index: 1;
+}
+.next-text-measure {
+  position: absolute;
+  width: 33px;
+  height: 20px;
+  left: 163px;
+  top: 578px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #FFFFFF;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* -------------------- Measurement Screen Specific -------------------- */
+
+/* Measurement Screen Titles */
+.measurement-height-title {
+  position: absolute;
+  top: 100px;
+  left: 20px;
+  width: 320px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 20px;
+  color: #000000;
+  text-align: left;
+}
+
+.measurement-weight-title {
+  position: absolute;
+  top: 220px;
+  left: 20px;
+  width: 320px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 20px;
+  color: #000000;
+  text-align: left;
+}
+
+/* Adjusted Height Inputs for Measurement Screen */
+.height-input-left {
+  box-sizing: border-box;
+  position: absolute;
+  width: 150px;
+  height: 40px;
+  left: 20px;
+  top: 140px;
+  background: #FFFFFF;
+  border: 2px solid #318516;
+  border-radius: 20px;
+  padding: 0 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #4A4A4A;
+}
+.height-input-right {
+  box-sizing: border-box;
+  position: absolute;
+  width: 150px;
+  height: 40px;
+  left: 190px;
+  top: 140px;
+  background: #FFFFFF;
+  border: 2px solid #318516;
+  border-radius: 20px;
+  padding: 0 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #4A4A4A;
+}
+
+.measurement-ft-text {
+  position: absolute;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 20px;
+  color: #4A4A4A;
+  left: 141px;
+  top: 150px;
+}
+
+.measurement-inch-text {
+  position: absolute;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 20px;
+  color: #4A4A4A;
+  left: 302px;
+  top: 150px;
+}
+
+/* Adjusted Weight Input for Measurement Screen */
+.weight-input {
+  box-sizing: border-box;
+  position: absolute;
+  width: 320px;
+  height: 40px;
+  left: 20px;
+  top: 260px;
+  background: #FFFFFF;
+  border: 2px solid #318516;
+  border-radius: 20px;
+  padding: 0 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #4A4A4A;
+}
+
+.measurement-kg-text {
+  position: absolute;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 20px;
+  color: #4A4A4A;
+  left: 306px;
+  top: 270px;
+}
+
+.signup-goal-screen {
+  position: relative;
+  width: 360px;
+  height: 800px;
+  background: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Title: "What’s your goal?" at (32, 261) */
+.goal-title {
+  position: absolute;
+  width: 176px;
+  height: 20px;
+  left: 32px;
+  top: 261px;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Lose Box (width=150, height=90, left=20, top=334) */
+.goal-box {
+  position: absolute;
+  width: 150px;
+  height: 90px;
+  background: #D9D9D9;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* On selection, highlight the box if you want */
+.goal-box.selected {
+  outline: 3px solid #318516; /* optional highlight */
+}
+
+/* Lose Box specifically */
+.lose-box {
+  left: 20px;
+  top: 334px;
+  background-image: url("lose.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* "Lose weight" text at (49,400) */
+.lose-text {
+  position: absolute;
+  width: 91px;
+  height: 20px;
+  left: 33px;
+  top: 68px;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Gain Box (width=150, height=90, left=190, top=334) */
+.gain-box {
+  left: 190px;
+  top: 334px;
+  background-image: url("gain.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* "Gain weight" text at (220,400) */
+.gain-text {
+  position: absolute;
+  width: 89px;
+  height: 20px;
+  left: 33px;
+  top: 68px;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Next Button at (20,477) size=320x40, green, radius=20 */
+.goal-next-btn {
+  position: absolute;
+  width: 320px;
+  height: 40px;
+  left: 20px;
+  top: 477px;
+  background: #318516;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* "Next" text at (163,487) */
+.goal-next-text {
+  position: absolute;
+  width: 35px;
+  height: 20px;
+  left: 163px;
+  top: 487px;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #FFFFFF;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* -------------------- Dashboard Specific -------------------- */
+.dashboard-container {
+  position: relative;
+  width: 360px;
+  height: 800px;
+  background: #FFFFFF;
+  overflow: hidden;
+}
+
+.week-days-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 100px 0;
+}
+
+.day-circle {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #ddd;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.active {
+  background-color: #318516 !important; /* Green highlight for the current day */
+  color: white;
+}
+
+/* Each circle is 26×26, absolutely placed at top:100px. 
+   The day letter is 12px, placed at top:79px. 
+   We replicate the Figma positions. */
+
+/* Circle 1 (Ellipse 2) for day 16 (S) */
+.day-circle-1 {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  left: 11px;
+  top: 125px;
+  background: #FFFFFF;
+  border: 0.5px solid #4A4A4A;
+  border-radius: 50%;
+}
+.day-label-1 {
+  position: absolute;
+  width: 8px;
+  height: 15px;
+  left: 20px;
+  top: 104px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+.day-number-1 {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  left: 18px;
+  top: 131px;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+
+/* Circle 2 (Ellipse 3) for day 17 (M) */
+.day-circle-2 {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  left: 63px;
+  top: 125px;
+  background: #FFFFFF;
+  border: 0.5px solid #4A4A4A;
+  border-radius: 50%;
+}
+.day-label-2 {
+  position: absolute;
+  width: 11px;
+  height: 15px;
+  left: 71px;
+  top: 104px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+.day-number-2 {
+  position: absolute;
+  width: 12px;
+  height: 13px;
+  left: 70px;
+  top: 131px;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+
+/* Circle 3 (Ellipse 4) for day 18 (T) */
+.day-circle-3 {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  left: 115px;
+  top: 125px;
+  background: #FFFFFF;
+  border: 0.5px solid #4A4A4A;
+  border-radius: 50%;
+}
+.day-label-3 {
+  position: absolute;
+  width: 8px;
+  height: 15px;
+  left: 125px;
+  top: 104px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+.day-number-3 {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  left: 122px;
+  top: 131px;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+
+/* Circle 4 (Ellipse 5) for day 19 (W) */
+.day-circle-4 {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  left: 167px;
+  top: 125px;
+  background: #FFFFFF;
+  border: 0.5px solid #4A4A4A;
+  border-radius: 50%;
+}
+.day-label-4 {
+  position: absolute;
+  width: 12px;
+  height: 15px;
+  left: 174px;
+  top: 104px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+.day-number-4 {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  left: 174px;
+  top: 131px;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+
+/* Circle 5 (Ellipse 6) for day 20 (T) */
+.day-circle-5 {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  left: 219px;
+  top: 125px;
+  background: #FFFFFF;
+  border: 0.5px solid #4A4A4A;
+  border-radius: 50%;
+}
+.day-label-5 {
+  position: absolute;
+  width: 8px;
+  height: 15px;
+  left: 228px;
+  top: 104px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+.day-number-5 {
+  position: absolute;
+  width: 14px;
+  height: 13px;
+  left: 225px;
+  top: 131px;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+
+/* Circle 6 (Ellipse 7) for day 21 (F) */
+.day-circle-6 {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  left: 271px;
+  top: 125px;
+  background: #FFFFFF;
+  border: 0.5px solid #4A4A4A;
+  border-radius: 50%;
+}
+.day-label-6 {
+  position: absolute;
+  width: 8px;
+  height: 15px;
+  left: 280px;
+  top: 104px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+.day-number-6 {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  left: 278px;
+  top: 131px;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+
+/* Circle 7 (Ellipse 8) for day 22 (S) - Active */
+.day-circle-7 {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  left: 323px;
+  top: 125px;
+  background: #318516;
+  border: 0.5px solid #4A4A4A;
+  border-radius: 50%;
+}
+.day-label-7 {
+  position: absolute;
+  width: 8px;
+  height: 15px;
+  left: 332px;
+  top: 104px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 0.25px;
+  color: #4A4A4A;
+}
+.day-number-7 {
+  position: absolute;
+  width: 14px;
+  height: 13px;
+  left: 329px;
+  top: 131px;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  letter-spacing: 0.25px;
+  color: #FFFFFF; /* White because it's active circle */
+}
+
+/* Macro Labels */
+.macros-label-carbs {
+  position: absolute;
+  width: 41px;
+  height: 17px;
+  left: 49px;
+  top: 536px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+.macros-label-protein {
+  position: absolute;
+  width: 50px;
+  height: 17px;
+  left: 155px;
+  top: 536px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+.macros-label-fat {
+  position: absolute;
+  width: 22px;
+  height: 17px;
+  left: 280px;
+  top: 536px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Profile Icon */
+.profile-icon {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  left: 286px;
+  top: 44px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Date Title (Dynamic) */
+.dashboard-date-title {
+  position: absolute;
+  width: 251px;
+  height: 29px;
+  left: 22px;
+  top: 167px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Calorie Ring */
+.calorie-ring {
+  position: absolute;
+  width: 175px;
+  height: 175px;
+  left: 87px;
+  top: 233px;
+  background: url("IMG_2628.png");
+  background-size: cover;
+  border-radius: 50%;
+}
+
+/* Macro Circles and Text */
+.macro-circle-1, .macro-circle-2, .macro-circle-3 {
+  position: absolute;
+  width: 95px;
+  height: 95px;
+  background: #FFFFFF;
+  border: 1px solid #A0A0A0;
+  border-radius: 50%;
+}
+.macro-circle-1 {
+  left: 22px;
+  top: 430px;
+}
+.macro-text-1 {
+  position: absolute;
+  width: 22px;
+  height: 17px;
+  left: 58px;
+  top: 469px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+.macro-circle-2 {
+  left: 133px;
+  top: 430px;
+}
+.macro-text-2 {
+  position: absolute;
+  width: 22px;
+  height: 17px;
+  left: 169px;
+  top: 469px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+.macro-circle-3 {
+  left: 244px;
+  top: 430px;
+}
+.macro-text-3 {
+  position: absolute;
+  width: 22px;
+  height: 17px;
+  left: 280px;
+  top: 469px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Calorie Streak Box & Text */
+.calorie-streak-box {
+  position: absolute;
+  width: 330px;
+  height: 93px;
+  left: 15px;
+  top: 590px;
+  background: #318516;
+  border-radius: 20px;
+}
+.calorie-tracking-label {
+  position: absolute;
+  width: 110px;
+  height: 17px;
+  left: 35px;
+  top: 606px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: 0.25px;
+  color: #FFFFFF;
+}
+.calorie-streak-text {
+  position: absolute;
+  width: 78px;
+  height: 29px;
+  left: 35px;
+  top: 628px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  letter-spacing: 0.25px;
+  color: #FFFFFF;
+}
+.streak-number {
+  position: absolute;
+  width: 65px;
+  height: 58px;
+  left: 261px;
+  top: 598px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 58px;
+  letter-spacing: 0.25px;
+  color: #FFFFFF;
+}
+.streak-days {
+  position: absolute;
+  width: 34px;
+  height: 17px;
+  left: 250px;
+  top: 650px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: 0.25px;
+  color: #FFFFFF;
+}
+
+/*------ Navigation Bar ------*/
+.nav-bar {
+  position: absolute;
+  width: 286px;
+  height: 30px;
+  left: 37px;
+  top: 709px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 58px;
+}
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+.nav-icon {
+  width: 30px;
+  height: 30px;
+  position: relative;
+}
+.summary-icon {
+  background: url("summary.png");
+  width: 30px;
+  height: 30px;
+}
+.record-icon {
+  background: url("record.png");
+  width: 27px;
+  height: 27px;
+}
+.recipe-icon {
+  background: url("recipe.png");
+  width: 30px;
+  height: 30px;
+}
+.plan-icon {
+  background: url("plan.png");
+  width: 28px;
+  height: 28px;
+}
+.nav-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #000000;
+}
+
+/* -------------------- Home Screen Button Styles -------------------- */
+.btn {
+  position: absolute;
+  left: 64px;
+  width: 233px;
+  height: 41px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  z-index: 2;
+}
+.btn.sign-up {
+  top: 550px;
+  background: #318516;
+  border-radius: 20px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #FFFFFF;
+}
+.btn.log-in {
+  top: 616px;
+  background: #FFFFFF;
+  border: 2px solid #318516;
+  border-radius: 20px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #318516;
+}
+
+/* Terms Text */
+.terms {
+  position: absolute;
+  width: 184px;
+  height: 20px;
+  left: 88px;
+  top: 702px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 8px;
+  line-height: 10px;
+  text-align: center;
+  color: #318516;
+  z-index: 2;
+}
+
+/* -------------------- Updated Gender Icons Using Images (with Radio Buttons) -------------------- */
+.gender-container {
+  position: relative;
+  width: 360px;
+  height: 800px;
+  background: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Title: "What’s your goal?" at (32, 261) */
+.gender-title {
+  position: absolute;
+  width: 220px;
+  height: 20px;
+  left: 32px;
+  top: 261px;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Lose Box (width=150, height=90, left=20, top=334) */
+.gender-box {
+  position: absolute;
+  width: 150px;
+  height: 90px;
+  background: #D9D9D9;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* On selection, highlight the box if you want */
+.gender-box.selected {
+  outline: 3px solid #318516; /* optional highlight */
+}
+
+/* Lose Box specifically */
+.male-box {
+  left: 20px;
+  top: 334px;
+  background-image: url("male-icon.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* "Lose weight" text at (49,400) */
+.male-text {
+  position: absolute;
+  width: 55px;
+  height: 20px;
+  left: 56px;
+  top: 68px;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Gain Box (width=150, height=90, left=190, top=334) */
+.female-box {
+  left: 190px;
+  top: 334px;
+  background-image: url("female-icon.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* "Gain weight" text at (220,400) */
+.female-text {
+  position: absolute;
+  width: 55px;
+  height: 20px;
+  left: 50px;
+  top: 68px;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Next Button at (20,477) size=320x40, green, radius=20 */
+.gender-next-btn {
+  position: absolute;
+  width: 320px;
+  height: 40px;
+  left: 20px;
+  top: 477px;
+  background: #318516;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* "Next" text at (163,487) */
+.gender-next-text {
+  position: absolute;
+  width: 35px;
+  height: 20px;
+  left: 163px;
+  top: 487px;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #FFFFFF;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* -------------------- Recipe Screen Specific -------------------- */
+.recipe-screen {
+  position: relative;
+  width: 360px;
+  height: 800px;
+  background: #ffffff;
+  overflow-y: auto;
+}
+
+/* Hide default header/footer on Recipe screen */
+.recipe-screen .header,
+.recipe-screen .footer {
+  display: none;
+}
+
+/* Recommended Recipes Title */
+.recommended-recipes {
+  position: absolute;
+  width: 281px;
+  height: 29px;
+  left: 20px;
+  top: 64px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Main Recipe Section (Rectangle 6) */
+.recipe-main {
+  position: absolute;
+  width: 320px;
+  height: 237px;
+  left: 20px;
+  top: 151px;
+  /*background: #D9D9D9;*/
+  background: url("salad.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  border-radius: 20px;
+}
+
+/* Recipe Title ("Vada Pav") */
+.recipe-title {
+  position: absolute;
+  width: 74px;
+  height: 19px;
+  left: 37px;
+  top: 195px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+  background-color: #ffffff;
+  border-radius: 7px;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+/* Recipe Grid for Additional Items */
+.recipe-grid {
+  position: absolute;
+  width: 320px;
+  height: 240px;
+  left: 20px;
+  top: 413px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.recipe-item {
+  width: 149px;
+  height: 115px;
+  background: #D9D9D9;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000000;
+}
+
+/* -------------------- Plan Screen Specific -------------------- */
+/* Plan Screen Container */
+.plan-screen {
+  position: relative;
+  width: 360px;
+  height: 800px;
+  background: #FFFFFF;
+}
+
+/* Title: Plan */
+.plan-title {
+  position: absolute;
+  width: 52px;
+  height: 29px;
+  left: 20px;
+  top: 64px;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Gray rectangle for day selection (Rectangle 7 in Figma) */
+.plan-day-box {
+  position: absolute;
+  width: 320px;
+  height: 64px;
+  left: 20px;
+  top: 142px;
+  background: #D9D9D9;
+  border-radius: 20px;
+}
+
+/* Green highlight behind "Today" (width=106, height=100, left=127, top=124) */
+.plan-day-highlight {
+  position: absolute;
+  width: 106px;
+  height: 100px;
+  left: 127px;
+  top: 124px;
+  background: #318516;
+  border-radius: 20px;
+}
+
+/* Yesterday, Today, Tomorrow text (14px) */
+.plan-day-yesterday {
+  position: absolute;
+  width: 71px;
+  height: 17px;
+  left: 39px;
+  top: 152px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: 0.25px;
+  color: #434343;
+  margin: 0;
+}
+.plan-day-today {
+  position: absolute;
+  width: 49px;
+  height: 19px;
+  left: 150px;
+  top: 151px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.25px;
+  color: #FFFFFF;
+  margin: 0;
+}
+.plan-day-tomorrow {
+  position: absolute;
+  width: 72px;
+  height: 17px;
+  left: 262px;
+  top: 152px;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: 0.25px;
+  color: #434343;
+  margin: 0;
+}
+
+/* Day numbers (2,3,4) at top=177 or top=181 */
+.plan-day-2 {
+  position: absolute;
+  width: 11px;
+  height: 19px;
+  left: 64px;
+  top: 177px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.25px;
+  color: #434343;
+  margin: 0;
+}
+.plan-day-3 {
+  position: absolute;
+  width: 11px;
+  height: 19px;
+  left: 173px;
+  top: 181px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.25px;
+  color: #FFFFFF; /* Because it's inside the green highlight */
+  margin: 0;
+}
+.plan-day-4 {
+  position: absolute;
+  width: 11px;
+  height: 19px;
+  left: 275px;
+  top: 181px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.25px;
+  color: #434343;
+  margin: 0;
+}
+
+/* Gray rectangle for calorie progress (width=320, height=64, left=21, top=235) */
+.plan-calorie-box {
+  position: absolute;
+  width: 320px;
+  height: 64px;
+  left: 21px;
+  top: 235px;
+  background: #D9D9D9;
+  border-radius: 12px;
+}
+
+/* White progress bar (width=297, height=9, left=32, top=256) */
+.plan-calorie-bg {
+  position: absolute;
+  width: 297px;
+  height: 9px;
+  left: 32px;
+  top: 256px;
+  background: #FFFFFF;
+  border-radius: 12px;
+}
+
+/* Green fill (width=73, height=9, left=32, top=256) */
+.plan-calorie-fill {
+  position: absolute;
+  width: 73px;
+  height: 9px;
+  left: 32px;
+  top: 256px;
+  background: #318516;
+  border-radius: 12px;
+}
+
+/* "200 of 1800 Calories" text at left=224, top=279 (10px) */
+.plan-calorie-count {
+  position: absolute;
+  width: 104px;
+  height: 12px;
+  left: 224px;
+  top: 279px;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  letter-spacing: 0.25px;
+  color: #434343;
+  margin: 0;
+}
+
+/* Breakfast Section */
+.plan-breakfast-title {
+  position: absolute;
+  width: 78px;
+  height: 19px;
+  left: 34px;
+  top: 326px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+.plan-breakfast-desc {
+  position: absolute;
+  width: 134px;
+  height: 36px;
+  left: 131px;
+  top: 383px;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+/* Breakfast image at left=20, top=355, w=85.5, h=76.5 */
+.plan-breakfast-img {
+  position: absolute;
+  left: 20px;
+  top: 355px;
+  width: 85.5px;
+  height: 76.5px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* Lunch Section */
+.plan-lunch-title {
+  position: absolute;
+  width: 50px;
+  height: 19px;
+  left: 32px;
+  top: 448px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+.plan-lunch-desc {
+  position: absolute;
+  width: 139px;
+  height: 36px;
+  left: 131px;
+  top: 503px;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+/* Lunch image at left=19, top=478, w=85.5, h=76.5 */
+.plan-lunch-img {
+  position: absolute;
+  left: 19px;
+  top: 478px;
+  width: 85.5px;
+  height: 76.5px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* Dinner Section */
+.plan-dinner-title {
+  position: absolute;
+  width: 54px;
+  height: 19px;
+  left: 36px;
+  top: 577px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+.plan-dinner-desc {
+  position: absolute;
+  width: 128px;
+  height: 36px;
+  left: 127px;
+  top: 630px;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+/* Dinner image at left=19, top=608, w=86, h=78 */
+.plan-dinner-img {
+  position: absolute;
+  left: 19px;
+  top: 608px;
+  width: 86px;
+  height: 78px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* -------------------- Record Screen Specific -------------------- */
+.record-screen {
+  position: relative;
+  width: 360px;
+  height: 800px;
+  background: #ffffff;
+  overflow-y: auto;
+}
+
+/* Record Label */
+.record-label {
+  position: absolute;
+  width: 85px;
+  height: 29px;
+  left: 20px;
+  top: 64px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Rectangle 4: Camera Preview */
+.rectangle4 {
+  position: absolute;
+  width: 317px;
+  height: 272px;
+  left: 20px;
+  top: 226px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #000; /* Fallback background */
+}
+
+.webcam-record, .captured-record {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Rectangle 3: Bottom Navigation Background */
+.rectangle3 {
+  position: absolute;
+  width: 360px;
+  height: 60px;
+  left: 0px;
+  top: 697px;
+  background: #F0F0F0;
+  border: #318516;
+  border-radius: 20px;
+}
+
+/* Gallery Button (Right Frame) */
+.gallery-button {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  left: 255px;
+  top: 564px;
+  cursor: pointer;
+}
+.gallery-button .gallery-vector {
+  position: absolute;
+  left: 8.33%;
+  right: 8.33%;
+  top: 8.33%;
+  bottom: 8.33%;
+  background: url("gallery.png");
+}
+
+/* Ellipse 1: Capture Button */
+.ellipse1 {
+  box-sizing: border-box;
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  left: 156px;
+  top: 555px;
+  background: #FFFFFF;
+  border: 3px solid #318516;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Capture Text */
+.capture-text {
+  position: absolute;
+  width: 48px;
+  height: 15px;
+  left: 156px;
+  top: 611px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Gallery Text */
+.gallery-text {
+  position: absolute;
+  width: 36px;
+  height: 12px;
+  left: 252px;
+  top: 605px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* -------------------- Record Screen Specific Additional CSS -------------------- */
+
+/* Record Title */
+.record-text {
+  position: absolute;
+  width: 85px;
+  height: 29px;
+  left: 20px;
+  top: 64px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Rectangle 4: Camera Preview Area */
+.rectangle4 {
+  position: absolute;
+  width: 317px;
+  height: 272px;
+  left: 20px;
+  top: 226px;
+  background: url("IMG_1744.png");
+  background-size: cover;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.webcam-view,
+.captured-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Ellipse 1: Capture Button */
+.ellipse1 {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  left: 156px;
+  top: 555px;
+  background: #FFFFFF;
+  border: 3px solid #318516;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Capture Text */
+.capture-text {
+  position: absolute;
+  width: 48px;
+  height: 15px;
+  left: 156px;
+  top: 611px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Gallery Button */
+.gallery-btn {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  left: 255px;
+  top: 564px;
+  cursor: pointer;
+}
+.gallery-btn::before {
+  content: "";
+  position: absolute;
+  left: 8.33%;
+  right: 8.33%;
+  top: 8.33%;
+  bottom: 8.33%;
+  background: url("gallery.png");
+}
+
+/* Gallery Text */
+.gallery-text {
+  position: absolute;
+  width: 36px;
+  height: 12px;
+  left: 252px;
+  top: 605px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* Process Button (replacing flash) */
+.process-btn {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  left: 75px;  /* same position as previous flash-btn */
+  top: 564px;
+  cursor: pointer;
+  background: #434343;
+}
+.process-btn::before {
+  content: "";
+  position: absolute;
+  left: 5.73%;
+  right: 11.67%;
+  top: 8.33%;
+  bottom: 5.73%;
+  background: #318516;
+}
+
+/* Process Text */
+.process-text {
+  position: absolute;
+  width: 46px;
+  height: 12px;
+  left: 67px;
+  top: 605px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+  color: #000000;
+}
+
+/* ---------- Review Overlay (Figma style) ---------- */
+.review-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 360px;
+  height: 800px;
+  background: rgba(255, 255, 255); /* Slightly translucent overlay */
+  z-index: 999; /* Above everything else */
+}
+
+/* Fade-in animation */
+.fade-in {
+  animation: fadeIn 0.5s forwards;
+}
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Title: "Review captured items" (top:64, left:20) */
+.review-title {
+  position: absolute;
+  width: 273px;
+  height: 29px;
+  left: 20px;
+  top: 64px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Close Button (X) (top:64, left:312) */
+.review-close {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  left: 312px;
+  top: 64px;
+  font-size: 24px;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+  color: #434343;
+}
+
+/* Time "8:00 PM" (top:175, left:42) */
+.review-time {
+  position: absolute;
+  left: 42px;
+  top: 175px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Outer Gray Box (width=320, height=364, left=20, top=151) */
+.review-box {
+  position: absolute;
+  width: 320px;
+  height: 364px;
+  left: 20px;
+  top: 151px;
+  background: #D9D9D9;
+  border-radius: 20px;
+}
+
+/* Resized captured image (width=291, height=132, left=36, top=209) */
+.review-image {
+  position: absolute;
+  width: 291px;
+  height: 132px;
+  left: 15px;
+  top: 50px;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+/* "Calories" (left=42, top=362) */
+.review-label-cal {
+  position: absolute;
+  left: 42px;
+  top: 210px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  color: #000000;
+  margin: 0;
+}
+.review-value-cal {
+  position: absolute;
+  left: 45px;
+  top: 233px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #434343;
+  margin: 0;
+}
+
+/* "Fats" (left=42, top=409) */
+.review-label-fat {
+  position: absolute;
+  left: 42px;
+  top: 255px;
+  font-weight: 500;
+  font-size: 20px;
+  color: #000000;
+  margin: 0;
+}
+.review-value-fat {
+  position: absolute;
+  left: 45px;
+  top: 275px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #434343;
+  margin: 0;
+}
+
+/* "Vitamins" (left=42, top=456) */
+.review-label-vit {
+  position: absolute;
+  left: 42px;
+  top: 295px;
+  font-weight: 500;
+  font-size: 20px;
+  color: #000000;
+  margin: 0;
+}
+.review-value-vit {
+  position: absolute;
+  left: 45px;
+  top: 313px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #434343;
+  margin: 0;
+}
+
+/* ------------------Login Page Container -------------------------*/
+.login-container {
+  width: 360px;
+  margin: 0 auto;
+  height: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+}
+
+/* Title */
+.login-title {
+  font-family: "Inter", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 20px;
+}
+
+/* Input Field Container */
+.input-container {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/* Input Labels */
+.input-label {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  color: #4a4a4a;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Input Fields */
+.login-input {
+  width: 93%;
+  padding: 10px;
+  border: 2px solid #318516;
+  border-radius: 20px;
+  font-size: 14px;
+  outline: none;
+}
+
+/* Log In Button */
+.login-button {
+  width: 100%;
+  padding: 10px;
+  background: #318516;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.login-button:hover {
+  background: #286c12;
+}
+
+/* Forgot Password */
+.forgot-password {
+  font-size: 14px;
+  font-weight: 700;
+  color: #318516;
+  margin-top: 10px;
+  cursor: pointer;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+/*------ Profile ------*/
+.profile-container {
+  width: 360px;
+  margin: 0 auto;
+  height: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+}
+
+/* Title */
+.profile-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 40px;
+}
+
+/* Profile Image */
+.profile-image {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.profile-image img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* User Info */
+.user-name {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.user-details {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Edit Profile */
+.edit-profile {
+  text-align: center;
+  color: #318516;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Streak Card */
+.streak-card {
+  background: #318516;
+  color: #fff;
+  padding: 15px;
+  margin: 20px auto;
+  border-radius: 10px;
+  text-align: center;
+  width: 90%;
+}
+
+.streak-days {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.streak-number {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* Invite Friends Card */
+.invite-card {
+  background: #318516;
+  color: #fff;
+  padding: 15px;
+  margin: 10px auto;
+  border-radius: 10px;
+  text-align: center;
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.share-icon {
+  font-size: 20px;
+}
