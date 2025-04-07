@@ -312,8 +312,8 @@ const SignupMeasurements = () => {
   const { signupData, updateSignupData } = useContext(SignupContext);
 
   // Initialize state from context if available
-  const [heightFt, setHeightFt] = useState(signupData.heightFt || "");
-  const [heightInch, setHeightInch] = useState(signupData.heightInch || "");
+  const [heightFt, setHeightFt] = useState(signupData.height_ft || "");
+  const [heightInch, setHeightInch] = useState(signupData.height_inch || "");
   const [weight, setWeight] = useState(signupData.weight || "");
 
   const handleNext = () => {
@@ -326,8 +326,12 @@ const SignupMeasurements = () => {
       return;
     }
     
-    // Save data to context
-    updateSignupData({ heightFt, heightInch, weight });
+    // Update the global context with keys matching the database
+    updateSignupData({ 
+      height_ft: heightFt, 
+      height_inch: heightInch, 
+      weight: weight 
+    });
     
     navigate("/signup-goal");
   };
@@ -379,14 +383,14 @@ const SignupMeasurements = () => {
 const SignupGoal = () => {
   const navigate = useNavigate();
   const { signupData, updateSignupData } = useContext(SignupContext);
-  const [goal, setGoal] = useState("");
+  const [goal, setGoal] = useState(""); // will be set to 1 or 2
 
   const handleNext = async () => {
     if (!goal) {
       alert("Please select a goal");
       return;
     }
-    // Update the context with the selected goal
+    // Update the context with the selected goal (numeric)
     updateSignupData({ goal });
 
     // Prepare final signup data, merging with previous steps
@@ -400,7 +404,7 @@ const SignupGoal = () => {
       });
       const result = await response.json();
       if (response.ok) {
-        // Signup successful; navigate to the dashboard or next step
+        // Signup successful; navigate to the dashboard
         navigate("/dashboard");
       } else {
         alert(result.error || "Signup failed");
@@ -420,15 +424,15 @@ const SignupGoal = () => {
       <h1 className="goal-title">What’s your goal?</h1>
       {/* Option for Lose Weight */}
       <div
-        className={`goal-box lose-box ${goal === "lose" ? "selected" : ""}`}
-        onClick={() => setGoal("lose")}
+        className={`goal-box lose-box ${goal === 1 ? "selected" : ""}`}
+        onClick={() => setGoal(1)}
       >
         <p className="lose-text">Lose weight</p>
       </div>
       {/* Option for Gain Weight */}
       <div
-        className={`goal-box gain-box ${goal === "gain" ? "selected" : ""}`}
-        onClick={() => setGoal("gain")}
+        className={`goal-box gain-box ${goal === 2 ? "selected" : ""}`}
+        onClick={() => setGoal(2)}
       >
         <p className="gain-text">Gain weight</p>
       </div>
@@ -438,6 +442,7 @@ const SignupGoal = () => {
     </div>
   );
 };
+
 
 // A component to compute and render the 7 day circles dynamically.
 const WeekDays = () => {
@@ -687,6 +692,8 @@ const Record = () => {
   const fileInputRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [showReviewBox, setShowReviewBox] = useState(false);
+  const [predictedFood, setPredictedFood] = useState(null);
+  const [nutrition, setNutrition] = useState(null);
 
   const capturePhoto = () => {
     if (webcamRef.current) {
@@ -713,22 +720,32 @@ const Record = () => {
   };
 
   const processImage = async () => {
-    alert("Image is being processed! Please wait.");
     if (!capturedImage) {
       alert("No image captured!");
       return;
     }
+
+    alert("Image is being processed! Please wait.");
+
     try {
       const response = await fetch("http://localhost:5000/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: capturedImage }),
       });
-      const result = await response.json();
-      console.log("Predicted Food Item:", result.food_item);
-      setShowReviewBox(true);
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setShowReviewBox(true);
+        setPredictedFood(data.food_item);
+        setNutrition(data.nutrition);
+      } else {
+        alert(data.error || "Prediction failed");
+      }
     } catch (error) {
       console.error("Error processing image:", error);
+      alert("Failed to process the image.");
     }
   };
 
@@ -783,23 +800,21 @@ const Record = () => {
           <div className="nav-label">Plan</div>
         </div>
       </div>
+
       {showReviewBox && (
         <div className="review-overlay fade-in">
           <h2 className="review-title">Review captured items</h2>
           <div className="review-close" onClick={closeReviewBox}>✕</div>
-          <p className="review-time">8:00 PM</p>
+          <p className="review-time">Nutritional Details</p>
           <div className="review-box">
-            <img
-              src={capturedImage || "/IMG_1744.jpg"}
-              alt="review"
-              className="review-image"
-            />
+            <img src={capturedImage || "/IMG_1744.jpg"} alt="review" className="review-image" />
+            <p className="review-label-food">Food Item: {predictedFood}</p>
             <p className="review-label-cal">Calories</p>
-            <p className="review-value-cal">000 cal</p>
+            <p className="review-value-cal">{nutrition?.calories || "N/A"} cal</p>
             <p className="review-label-fat">Fats</p>
-            <p className="review-value-fat">000 cal</p>
+            <p className="review-value-fat">{nutrition?.fats || "N/A"} g</p>
             <p className="review-label-vit">Vitamins</p>
-            <p className="review-value-vit">000 cal</p>
+            <p className="review-value-vit">{nutrition?.vitamins || "N/A"} mg</p>
           </div>
         </div>
       )}

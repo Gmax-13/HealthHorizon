@@ -1,4 +1,11 @@
-Flask
+flask
 flask-cors
-psycopg2
+flask-bcrypt
+flask-jwt-extended
+psycopg2-binary
+tensorflow
+pillow
+numpy
 werkzeug
+python-dotenv
+gunicorn

@@ -1824,7 +1824,7 @@
   left: 75px;  /* same position as previous flash-btn */
   top: 564px;
   cursor: pointer;
-  background: #434343;
+  /*background: #434343;*/
 }
 .process-btn::before {
   content: "";
@@ -1833,7 +1833,8 @@
   right: 11.67%;
   top: 8.33%;
   bottom: 5.73%;
-  background: #318516;
+  background: url("process.png");
+  background-size: cover;
 }
 
 /* Process Text */

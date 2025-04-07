@@ -16,7 +16,8 @@
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.5",
     "react-scripts": "5.0.1",
-    "react-webcam": "^7.2.0"
+    "react-webcam": "^7.2.0",
+    "serve": "^14.2.4"
   },
   "scripts": {
     "start": "react-scripts start",
