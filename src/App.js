@@ -564,17 +564,17 @@ const Dashboard = () => {
       
       {/* Macro Circles and Text */}
       <div className="macro-circle-1"></div>
-      <div className="macro-text-1">0 g</div>
+      <div className="macro-text-1">124 g</div>
       <div className="macro-circle-2"></div>
-      <div className="macro-text-2">0 g</div>
+      <div className="macro-text-2">108 g</div>
       <div className="macro-circle-3"></div>
-      <div className="macro-text-3">0 g</div>
+      <div className="macro-text-3">203 g</div>
       
       {/* Calorie Tracking (Streak) */}
       <div className="calorie-streak-box"></div>
       <div className="calorie-tracking-label">Calorie tracking</div>
       <div className="calorie-streak-text">Streak</div>
-      <div className="streak-number">90</div>
+      <div className="streak-number">03</div>
       <div className="streak-days">Days</div>
 
       {/* Bottom Navigation */}
@@ -656,10 +656,10 @@ const Recipe = () => {
         <div className="recipe-title">Salad</div>
       </div>
       <div className="recipe-grid">
-        <div className="recipe-item">Fruits</div>
-        <div className="recipe-item">Food No 4</div>
-        <div className="recipe-item">Food No 5</div>
-        <div className="recipe-item">Egg</div>
+        <div className="recipe-item1">Fruits</div>
+        <div className="recipe-item2">Food No 4</div>
+        <div className="recipe-item3">Food No 5</div>
+        <div className="recipe-item4">Egg</div>
       </div>
       
       <div className="nav-container">

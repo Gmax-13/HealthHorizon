@@ -866,7 +866,7 @@
 }
 .macro-text-1 {
   position: absolute;
-  width: 22px;
+  width: 50px;
   height: 17px;
   left: 58px;
   top: 469px;
@@ -883,7 +883,7 @@
 }
 .macro-text-2 {
   position: absolute;
-  width: 22px;
+  width: 50px;
   height: 17px;
   left: 169px;
   top: 469px;
@@ -900,7 +900,7 @@
 }
 .macro-text-3 {
   position: absolute;
-  width: 22px;
+  width: 50px;
   height: 17px;
   left: 280px;
   top: 469px;
@@ -1278,10 +1278,11 @@
   justify-content: space-between;
 }
 
-.recipe-item {
+.recipe-item1{
   width: 149px;
   height: 115px;
-  background: #D9D9D9;
+  background: url("khichdi.jpg");
+  background-size: cover;
   border-radius: 20px;
   display: flex;
   justify-content: center;
@@ -1292,6 +1293,50 @@
   color: #000000;
 }
 
+.recipe-item2 {
+  width: 149px;
+  height: 115px;
+  background: url("khichdi.jpg");
+  background-size: cover;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000000;
+}
+
+.recipe-item3 {
+  width: 149px;
+  height: 115px;
+  background: url("khichdi.jpg");
+  background-size: cover;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000000;
+}
+
+.recipe-item4 {
+  width: 149px;
+  height: 115px;
+  background: url("khichdi.jpg");
+  background-size: cover;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000000;
+}
 /* -------------------- Plan Screen Specific -------------------- */
 /* Plan Screen Container */
 .plan-screen {
@@ -1909,7 +1954,7 @@
 .review-time {
   position: absolute;
   left: 42px;
-  top: 175px;
+  top: 100px;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 14px;
@@ -1927,6 +1972,12 @@
   top: 151px;
   background: #D9D9D9;
   border-radius: 20px;
+}
+
+.review-label-food {
+  width: 200px;
+  padding-left: 25px;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Resized captured image (width=291, height=132, left=36, top=209) */
@@ -1964,6 +2015,7 @@
 
 /* "Fats" (left=42, top=409) */
 .review-label-fat {
+  font-family: 'Inter', sans-serif;
   position: absolute;
   left: 42px;
   top: 255px;
@@ -1973,6 +2025,7 @@
   margin: 0;
 }
 .review-value-fat {
+  font-family: 'Inter', sans-serif;
   position: absolute;
   left: 45px;
   top: 275px;
@@ -1984,6 +2037,7 @@
 
 /* "Vitamins" (left=42, top=456) */
 .review-label-vit {
+  font-family: 'Inter', sans-serif;
   position: absolute;
   left: 42px;
   top: 295px;
@@ -1993,9 +2047,10 @@
   margin: 0;
 }
 .review-value-vit {
+  font-family: 'Inter', sans-serif;
   position: absolute;
   left: 45px;
-  top: 313px;
+  top: 316px;
   font-weight: 400;
   font-size: 14px;
   color: #434343;
