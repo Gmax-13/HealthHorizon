@@ -646,46 +646,6 @@ const Profile = () => {
   );
 };
 
-const Recipe = () => {
-  const navigate = useNavigate();
-  return (
-    <div className="recipe-screen">
-      <p className="recommended-recipes">Recommended Recipes</p>
-      <div className="recipe-main">
-        <div className="recipe-main-bg"></div>
-        <div className="recipe-title">Salad</div>
-      </div>
-      <div className="recipe-grid">
-        <div className="recipe-item1">Fruits</div>
-        <div className="recipe-item2">Food No 4</div>
-        <div className="recipe-item3">Food No 5</div>
-        <div className="recipe-item4">Egg</div>
-      </div>
-      
-      <div className="nav-container">
-        <div className="nav-bar">
-          <div className="nav-item" onClick={() => navigate("/dashboard")}>
-            <div className="nav-icon summary-icon"></div>
-            <div className="nav-label">Summary</div>
-          </div>
-          <div className="nav-item" onClick={() => navigate("/record")}>
-            <div className="nav-icon record-icon"></div>
-            <div className="nav-label">Record</div>
-          </div>
-          <div className="nav-item" onClick={() => navigate("/recipe")}>
-            <div className="nav-icon recipe-icon"></div>
-            <div className="nav-label">Recipe</div>
-          </div>
-          <div className="nav-item" onClick={() => navigate("/plan")}>
-            <div className="nav-icon plan-icon"></div>
-            <div className="nav-label">Plan</div>
-          </div>
-      </div>
-    </div>
-    </div>
-  );
-};
-
 const Record = () => {
   const navigate = useNavigate();
   const webcamRef = useRef(null);
@@ -811,13 +771,118 @@ const Record = () => {
             <p className="review-label-food">Food Item: {predictedFood}</p>
             <p className="review-label-cal">Calories</p>
             <p className="review-value-cal">{nutrition?.calories || "N/A"} cal</p>
+            <p className="review-label-prot">Proteins</p>
+            <p className="review-value-prot">{nutrition?.protiens || "N/A"}%</p>
             <p className="review-label-fat">Fats</p>
-            <p className="review-value-fat">{nutrition?.fats || "N/A"} g</p>
+            <p className="review-value-fat">{nutrition?.fats || "N/A"}%</p>
             <p className="review-label-vit">Vitamins</p>
-            <p className="review-value-vit">{nutrition?.vitamins || "N/A"} mg</p>
+            <p className="review-value-vit">{nutrition?.vitamins || "N/A"} </p>
+            <p className="review-label-min">Minerals</p>
+            <p className="review-value-min">{nutrition?.minerals || "N/A"} </p>
+            <p className="review-label-qty">Quantity</p>
+            <p className="review-value-qty">{nutrition?.quantity || "N/A"} </p>
           </div>
         </div>
       )}
+    </div>
+  );
+};
+
+const Recipe = () => {
+  const navigate = useNavigate();
+  const [recipes, setRecipes] = useState([]);
+  const [mainRecipe, setMainRecipe] = useState(null);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+
+  const plan_id = 1;
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/api/recommended?plan_id=${plan_id}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Received data:", data);
+        if (data && data.length) {
+          setMainRecipe(data[0]);
+          setRecipes(data.slice(1));
+        }
+      })
+      .catch((error) => console.error("Error fetching recipes:", error));
+  }, [plan_id]);
+
+  const closeOverlay = () => setSelectedRecipe(null);
+
+  return (
+    <div className="recipe-screen">
+      <p className="recommended-recipes">Recommended Recipes</p>
+      
+      {/* Dynamic Recipe Main Section */}
+      {mainRecipe && (
+        <div 
+          className="recipe-main" 
+          style={{ backgroundImage: `url(http://localhost:5000/static/images/${mainRecipe.image})` }}
+          onClick={() => setSelectedRecipe(mainRecipe)}
+        >
+          <div className="recipe-title">{mainRecipe.recipe_name}</div>
+        </div>
+      )}
+
+      {/* Dynamic Recipe Grid */}
+      <div className="recipe-grid">
+        {recipes.map((recipe) => (
+          <div
+            key={recipe.recommended_id}
+            className="recipe-item"
+            onClick={() => setSelectedRecipe(recipe)}
+            style={{ backgroundImage: `url(http://localhost:5000/static/images/${recipe.image})` }}
+          >
+            <div className="recipe-name">{recipe.recipe_name}</div>
+          </div>
+        ))}
+      </div>
+      
+      {/* Overlay for recipe details */}
+      {selectedRecipe && (
+        <div className="overlay" onClick={closeOverlay}>
+          <div className="overlay-content" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={`http://localhost:5000/static/images/${selectedRecipe.image}`}
+              alt={selectedRecipe.recipe_name}
+              className="overlay-image"
+            />
+            <h2>{selectedRecipe.recipe_name}</h2>
+            <p><strong>Ingredients:</strong> {selectedRecipe.ingredients}</p>
+            <p><strong>Steps:</strong> {selectedRecipe.recipe_steps}</p>
+            <p><strong>Calories:</strong> {selectedRecipe.calorie}</p>
+            <button onClick={closeOverlay}>Close</button>
+          </div>
+        </div>
+      )}
+      
+      <div className="nav-container">
+        <div className="nav-bar">
+          <div className="nav-item" onClick={() => navigate("/dashboard")}>
+            <div className="nav-icon summary-icon"></div>
+            <div className="nav-label">Summary</div>
+          </div>
+          <div className="nav-item" onClick={() => navigate("/record")}>
+            <div className="nav-icon record-icon"></div>
+            <div className="nav-label">Record</div>
+          </div>
+          <div className="nav-item" onClick={() => navigate("/recipe")}>
+            <div className="nav-icon recipe-icon"></div>
+            <div className="nav-label">Recipe</div>
+          </div>
+          <div className="nav-item" onClick={() => navigate("/plan")}>
+            <div className="nav-icon plan-icon"></div>
+            <div className="nav-label">Plan</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

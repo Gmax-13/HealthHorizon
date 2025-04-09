@@ -1,5 +1,5 @@
 # backend/app.py
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 import psycopg2
 import numpy as np
 import tensorflow as tf
@@ -18,7 +18,7 @@ from tensorflow.keras.preprocessing import image
 # Load environment variables from .env file
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static")
 CORS(app)  # Allows requests from a different origin (e.g., your React app)
 bcrypt = Bcrypt(app)
 
@@ -35,8 +35,7 @@ MODEL_PATH = "food_model_CNN.keras"
 model = tf.keras.models.load_model(MODEL_PATH)
 
 # Load class names from dataset directory
-# DATASET_PATH = "path_to_dataset"  # Update this to the actual dataset path
-class_names = ["Biryani", "Dosa", "Idali", "Palak paneer", "Shira", "chapati photo", "gulab jamun", "jalebi", "poha", "rice_images"]
+class_names = ["Biryani", "Dosa", "Idli", "Palak Paneer", "Shira", "Chapati", "Gulab Jamun", "Jalebi", "Poha", "Rice"]
 
 def preprocess_image(image_data):
     """Preprocess image for model prediction."""
@@ -70,7 +69,7 @@ def predict():
         record_id = cursor.fetchone()[0]
 
         # Retrieve nutritional values
-        cursor.execute("SELECT calories, fats, vitamins FROM nutrition WHERE food_item = %s", (predicted_food,))
+        cursor.execute("SELECT calories, protiens, fats, vitamins, minerals, quantity FROM nutrition WHERE food_item = %s", (predicted_food,))
         nutrition_data = cursor.fetchone()
         cursor.close()
 
@@ -79,8 +78,11 @@ def predict():
                 "food_item": predicted_food,
                 "nutrition": {
                     "calories": nutrition_data[0],
-                    "fats": nutrition_data[1],
-                    "vitamins": nutrition_data[2]
+                    "protiens": nutrition_data[1],
+                    "fats": nutrition_data[2],
+                    "vitamins": nutrition_data[3],
+                    "minerals": nutrition_data[4],
+                    "quantity": nutrition_data[5]
                 },
                 "record_id": record_id
             }), 200
@@ -135,13 +137,6 @@ def signup():
         print("Error during signup:", e)
         return jsonify({"error": "Signup failed"}), 500
 
-load_dotenv()  # Load .env variables
-load_dotenv(find_dotenv())
-app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET_KEY")
-print("JWT_SECRET_KEY:", os.getenv("JWT_SECRET_KEY"))
-jwt = JWTManager(app)
-
-# **Login Route**
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -168,11 +163,49 @@ def login():
         print("Error during login:", e)
         return jsonify({"error": "Login failed"}), 500
 
-# **Protected Route Example (Requires Token)**
 @app.route('/dashboard', methods=['GET'])
 @jwt_required()
 def dashboard():
     return jsonify({"message": "Welcome to the dashboard!"}), 200
+
+# New endpoint to fetch recommended recipes
+@app.route('/api/recommended', methods=['GET'])
+def get_recommended_recipes():
+    plan_id = request.args.get("plan_id")
+    if not plan_id:
+        return jsonify({"error": "plan_id parameter is required"}), 400
+    try:
+        cursor = conn.cursor()
+        query = """
+            SELECT recommended_id, plan_id, recipe_name, ingredients, recipe_steps, image, calorie 
+            FROM recommended 
+            WHERE plan_id = %s 
+            ORDER BY random() 
+            LIMIT 5;
+        """
+        cursor.execute(query, (plan_id,))
+        recipes = cursor.fetchall()
+        cursor.close()
+
+        recommended_recipes = []
+        for row in recipes:
+            recommended_recipes.append({
+                "recommended_id": row[0],
+                "plan_id": row[1],
+                "recipe_name": row[2],
+                "ingredients": row[3],
+                "recipe_steps": row[4],
+                "image": row[5],
+                "calorie": row[6]
+            })
+        return jsonify(recommended_recipes), 200
+    except Exception as e:
+        print("Error fetching recommended recipes:", e)
+        return jsonify({"error": "Failed to fetch recipes"}), 500
+    
+@app.route('/static/images/<path:filename>')
+def serve_image(filename):
+    return send_from_directory("static/images", filename)
 
 # Run Flask App
 if __name__ == '__main__':
