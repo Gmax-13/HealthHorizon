@@ -132,7 +132,7 @@ CREATE TABLE plan_display (
 INSERT INTO plan_display (plan_id, food_type, food_item_name, calorie, image)
 VALUES
 -- Weight Loss Plan (plan_id = 1)
-(1, 'breakfast', 'Sprouted Moong Salad', 250, 'sprouted_moong.jpg'),
+(1, 'breakfast', 'Sprouted Moong Salad', 250, 'sprouted_moong_salad.jpg'),
 (1, 'breakfast', 'Oats Upma', 300, 'oats_upma.jpg'),
 (1, 'breakfast', 'Vegetable Poha with Minimal Oil', 280, 'veg_poha.jpg'),
 (1, 'lunch', 'Grilled Chicken Salad', 350, 'grilled_chicken_salad.jpg'),
@@ -153,4 +153,5 @@ VALUES
 (2, 'dinner', 'Butter Chicken with Rice', 900, 'butter_chicken.jpg'),
 (2, 'dinner', 'Mumbai Style Prawn Curry with Rice', 850, 'prawn_curry.jpg');
 
-SELECT * FROM recommended WHERE plan_id = 1;
+Drop table plan_display
+SELECT * FROM plan_display WHERE plan_id = 1;

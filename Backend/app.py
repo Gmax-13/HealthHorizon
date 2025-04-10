@@ -205,6 +205,55 @@ def get_recommended_recipes():
         print("Error fetching recommended recipes:", e)
         return jsonify({"error": "Failed to fetch recipes"}), 500
     
+@app.route('/api/plan_display', methods=['GET'])
+def get_plan_display_items():
+    plan_id = request.args.get("plan_id", type=int)
+    if not plan_id:
+        return jsonify({"error": "plan_id parameter is required"}), 400
+
+    cursor = conn.cursor()
+    items = {}
+    for meal in ['breakfast', 'lunch', 'dinner']:
+        query = """
+            SELECT food_item_name, calorie, image, food_type
+            FROM plan_display
+            WHERE plan_id = %s AND food_type = %s
+            ORDER BY random()
+            LIMIT 1;
+        """
+        cursor.execute(query, (plan_id, meal))
+        row = cursor.fetchone()
+        if row:
+            items[meal] = {
+                "food_item_name": row[0],
+                "calorie": row[1],
+                "image": row[2],
+                "food_type": row[3]
+            }
+        else:
+            items[meal] = None
+    cursor.close()
+    return jsonify(items), 200
+
+@app.route('/api/calories_today', methods=['GET'])
+def get_calories_today():
+    try:
+        cursor = conn.cursor()
+        query = """
+            SELECT COALESCE(SUM(n.calories), 0)
+            FROM food_records fr
+            JOIN nutrition n ON fr.food_item = n.food_item
+            WHERE DATE(created_at) = CURRENT_DATE;
+        """
+        cursor.execute(query)
+        result = cursor.fetchone()
+        cursor.close()
+        fill = result[0] if result and result[0] is not None else 0
+        return jsonify({"fill": fill}), 200
+    except Exception as e:
+        print("Error fetching today's calories:", e)
+        return jsonify({"error": "Error calculating fill"}), 500
+
 @app.route('/static/images/<path:filename>')
 def serve_image(filename):
     return send_from_directory("static/images", filename)

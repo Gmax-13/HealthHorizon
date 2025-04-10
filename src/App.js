@@ -894,111 +894,239 @@ const Recipe = () => {
 const Plan = () => {
   const navigate = useNavigate();
 
-  // State to store the day names and date numbers
+  // State for day labels and numbers
   const [yesterdayName, setYesterdayName] = useState("");
   const [todayName, setTodayName] = useState("");
   const [tomorrowName, setTomorrowName] = useState("");
   const [yesterdayDate, setYesterdayDate] = useState(0);
   const [todayDate, setTodayDate] = useState(0);
   const [tomorrowDate, setTomorrowDate] = useState(0);
+  const [selectedDay, setSelectedDay] = useState("today"); // "yesterday", "today", or "tomorrow"
 
+  // State to store plan meal items from plan_display
+  const [planItems, setPlanItems] = useState({});
+  // Cache for each day's plan items so we don't re-fetch for already selected day
+  const [planCache, setPlanCache] = useState({});
+
+  // Calorie progress values
+  const [calorieFill, setCalorieFill] = useState(0);
+  const [calorieGoal, setCalorieGoal] = useState(0);
+
+  // Get planId dynamically (for example from localStorage)
+  const planId = localStorage.getItem("planId") || 1;
+
+  // Setup day names and numeric dates once on mount
   useEffect(() => {
     const now = new Date();
-
-    // Calculate numeric dates for yesterday, today, tomorrow
     const day = now.getDate();
     setTodayDate(day);
     setYesterdayDate(day - 1);
     setTomorrowDate(day + 1);
-
-    // Calculate day-of-week names
-    const dayIndex = now.getDay(); // 0=Sun,1=Mon,...6=Sat
-    const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-
-    // 'todayName' is dayNames[dayIndex]
-    // 'yesterdayName' is dayNames[(dayIndex + 6) % 7]
-    // 'tomorrowName' is dayNames[(dayIndex + 1) % 7]
+    
+    const dayIndex = now.getDay(); // 0=Sun, 1=Mon,...,6=Sat
+    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     setTodayName(dayNames[dayIndex]);
     setYesterdayName(dayNames[(dayIndex + 6) % 7]);
     setTomorrowName(dayNames[(dayIndex + 1) % 7]);
   }, []);
 
+  // Function to fetch plan items for a given day
+  const fetchPlanItems = (day) => {
+    fetch(`http://localhost:5000/api/plan_display?plan_id=${planId}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(`Plan items for ${day}:`, data);
+        // Update cache: use a new object so React sees the change
+        setPlanCache(prevCache => ({ ...prevCache, [day]: data }));
+        setPlanItems(data);
+        // Calculate goal as the sum of the calories of all available meals
+        const goal = 
+          (data.breakfast ? data.breakfast.calorie : 0) +
+          (data.lunch ? data.lunch.calorie : 0) +
+          (data.dinner ? data.dinner.calorie : 0);
+        setCalorieGoal(goal);
+        localStorage.setItem("planGoal", goal);
+      })
+      .catch(error => console.error("Error fetching plan display items:", error));
+  };
+
+  // useEffect to fetch plan items when selectedDay changes,
+  // but only fetch if we don't have them in cache already.
+  useEffect(() => {
+    if (!planId) return;
+
+    if (planCache[selectedDay]) {
+      // If the plan items have been cached, use them.
+      setPlanItems(planCache[selectedDay]);
+      const data = planCache[selectedDay];
+      const goal = 
+          (data.breakfast ? data.breakfast.calorie : 0) +
+          (data.lunch ? data.lunch.calorie : 0) +
+          (data.dinner ? data.dinner.calorie : 0);
+      setCalorieGoal(goal);
+      localStorage.setItem("planGoal", goal);
+    } else {
+      // Otherwise, fetch the plan items and cache them.
+      fetchPlanItems(selectedDay);
+    }
+  }, [planId, selectedDay, planCache]);
+
+  // Fetch today's filled calories (only for "today" view)
+  useEffect(() => {
+    if (selectedDay === "today") {
+      fetch("http://localhost:5000/api/calories_today")
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log("Today's fill data:", data);
+          setCalorieFill(data.fill);
+          localStorage.setItem("planFill", data.fill);
+        })
+        .catch(error => console.error("Error fetching today's calories:", error));
+    } else {
+      // For yesterday or tomorrow, fill should be zero.
+      setCalorieFill(0);
+      localStorage.setItem("planFill", 0);
+    }
+  }, [selectedDay]);
+
+  // Handler for day selection
+  const handleDayClick = (day) => {
+    if (day !== selectedDay) {
+      setSelectedDay(day);
+      // When the day changes, if it's not in the cache, the effect will fetch it.
+    }
+  };
+
+  // Calculate fill percentage (avoid division by zero)
+  const fillPercentage = calorieGoal > 0 ? Math.min((calorieFill / calorieGoal) * 100, 100) : 0;
+
   return (
     <div className="plan-screen">
-      {/* Title: Plan */}
+      {/* Title */}
       <h1 className="plan-title">Plan</h1>
-
-      {/* Gray rectangle for day selection */}
-      <div className="plan-day-box"></div>
-      {/* Green highlight behind "Today" */}
-      <div className="plan-day-highlight"></div>
       
-      {/* Dynamic day names */}
-      <p className="plan-day-yesterday">{yesterdayName}</p>
-      <p className="plan-day-today">{todayName}</p>
-      <p className="plan-day-tomorrow">{tomorrowName}</p>
+      {/* Day Selection */}
+      <div className="plan-day-container">
+        <div 
+          className={`plan-day ${selectedDay === 'yesterday' ? 'selected' : ''}`}
+          onClick={() => handleDayClick('yesterday')}
+        >
+          <p className="plan-day-label">{yesterdayName}</p>
+          <p className="plan-day-number">{yesterdayDate}</p>
+        </div>
+        <div 
+          className={`plan-day ${selectedDay === 'today' ? 'selected' : ''}`}
+          onClick={() => handleDayClick('today')}
+        >
+          <p className="plan-day-label">{todayName}</p>
+          <p className="plan-day-number">{todayDate}</p>
+        </div>
+        <div 
+          className={`plan-day ${selectedDay === 'tomorrow' ? 'selected' : ''}`}
+          onClick={() => handleDayClick('tomorrow')}
+        >
+          <p className="plan-day-label">{tomorrowName}</p>
+          <p className="plan-day-number">{tomorrowDate}</p>
+        </div>
+      </div>
 
-      {/* Dynamic day numbers */}
-      <p className="plan-day-2">{yesterdayDate}</p>
-      <p className="plan-day-3">{todayDate}</p>
-      <p className="plan-day-4">{tomorrowDate}</p>
+      {/* Calorie Progress Section */}
+      <div className="plan-calorie-box">
+        <div className="plan-calorie-bg"></div>
+        <div 
+          className="plan-calorie-fill"
+          style={{ width: `${fillPercentage}%` }}
+        ></div>
+        <p className="plan-calorie-count">
+          {calorieFill} of {calorieGoal} Calories
+        </p>
+      </div>
 
-      {/* Gray rectangle for calorie progress */}
-      <div className="plan-calorie-box"></div>
-      {/* White background progress bar */}
-      <div className="plan-calorie-bg"></div>
-      {/* Green progress bar */}
-      <div className="plan-calorie-fill"></div>
-      <p className="plan-calorie-count">200 of 1800 Calories</p>
+      {/* Meals Section */}
+      <div className="plan-meals">
+        {/* Breakfast */}
+        <h2 className="plan-breakfast-title">Breakfast</h2>
+        {planItems.breakfast ? (
+          <>
+            <p className="plan-breakfast-desc">
+              {planItems.breakfast.food_item_name} • about {planItems.breakfast.calorie} calories
+            </p>
+            <img
+              src={`http://localhost:5000/static/images/${planItems.breakfast.image}`}
+              alt={planItems.breakfast.food_item_name}
+              className="plan-breakfast-img"
+            />
+          </>
+        ) : (
+          <p className="plan-no-item">No breakfast item available</p>
+        )}
 
-      {/* Breakfast Section */}
-      <h2 className="plan-breakfast-title">Breakfast</h2>
-      <p className="plan-breakfast-desc">Upma 1 bowl • about 115 calories</p>
-      <img
-        src="/Best-South-Indian-Rava-Upma-Recipe.png"
-        alt="Upma"
-        className="plan-breakfast-img"
-      />
+        {/* Lunch */}
+        <h2 className="plan-lunch-title">Lunch</h2>
+        {planItems.lunch ? (
+          <>
+            <p className="plan-lunch-desc">
+              {planItems.lunch.food_item_name} • about {planItems.lunch.calorie} calories
+            </p>
+            <img
+              src={`http://localhost:5000/static/images/${planItems.lunch.image}`}
+              alt={planItems.lunch.food_item_name}
+              className="plan-lunch-img"
+            />
+          </>
+        ) : (
+          <p className="plan-no-item">No lunch item available</p>
+        )}
 
-      {/* Lunch Section */}
-      <h2 className="plan-lunch-title">Lunch</h2>
-      <p className="plan-lunch-desc">Egg fried rice 1 plate • about 400 calories</p>
-      <img
-        src="/Easy-Egg-fried-rice-2.png"
-        alt="Egg fried rice"
-        className="plan-lunch-img"
-      />
-
-      {/* Dinner Section */}
-      <h2 className="plan-dinner-title">Dinner</h2>
-      <p className="plan-dinner-desc">Chapatti & Rice 1 bowl • about 115 calorie</p>
-      <img
-        src="/roti_or_rice_what_is_better1.png"
-        alt="Chapatti & Rice"
-        className="plan-dinner-img"
-      />
+        {/* Dinner */}
+        <h2 className="plan-dinner-title">Dinner</h2>
+        {planItems.dinner ? (
+          <>
+            <p className="plan-dinner-desc">
+              {planItems.dinner.food_item_name} • about {planItems.dinner.calorie} calories
+            </p>
+            <img
+              src={`http://localhost:5000/static/images/${planItems.dinner.image}`}
+              alt={planItems.dinner.food_item_name}
+              className="plan-dinner-img"
+            />
+          </>
+        ) : (
+          <p className="plan-no-item">No dinner item available</p>
+        )}
+      </div>
 
       {/* Bottom Navigation */}
       <div className="nav-container">
         <div className="nav-bar">
-        <div className="nav-item" onClick={() => navigate("/dashboard")}>
-          <div className="nav-icon summary-icon"></div>
-          <div className="nav-label">Summary</div>
+          <div className="nav-item" onClick={() => navigate("/dashboard")}>
+            <div className="nav-icon summary-icon"></div>
+            <div className="nav-label">Summary</div>
+          </div>
+          <div className="nav-item" onClick={() => navigate("/record")}>
+            <div className="nav-icon record-icon"></div>
+            <div className="nav-label">Record</div>
+          </div>
+          <div className="nav-item" onClick={() => navigate("/recipe")}>
+            <div className="nav-icon recipe-icon"></div>
+            <div className="nav-label">Recipe</div>
+          </div>
+          <div className="nav-item" onClick={() => navigate("/plan")}>
+            <div className="nav-icon plan-icon"></div>
+            <div className="nav-label">Plan</div>
+          </div>
         </div>
-        <div className="nav-item" onClick={() => navigate("/record")}>
-          <div className="nav-icon record-icon"></div>
-          <div className="nav-label">Record</div>
-        </div>
-        <div className="nav-item" onClick={() => navigate("/recipe")}>
-          <div className="nav-icon recipe-icon"></div>
-          <div className="nav-label">Recipe</div>
-        </div>
-        <div className="nav-item" onClick={() => navigate("/plan")}>
-          <div className="nav-icon plan-icon"></div>
-          <div className="nav-label">Plan</div>
-        </div>
-  </div>
-</div>
+      </div>
     </div>
   );
 };
