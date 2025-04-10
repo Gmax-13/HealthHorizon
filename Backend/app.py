@@ -69,7 +69,7 @@ def predict():
         record_id = cursor.fetchone()[0]
 
         # Retrieve nutritional values
-        cursor.execute("SELECT calories, protiens, fats, vitamins, minerals, quantity FROM nutrition WHERE food_item = %s", (predicted_food,))
+        cursor.execute("SELECT calories, proteins, carbohydrates, fats, sugar, vitamins, minerals, quantity FROM nutrition WHERE food_item = %s", (predicted_food,))
         nutrition_data = cursor.fetchone()
         cursor.close()
 
@@ -78,11 +78,13 @@ def predict():
                 "food_item": predicted_food,
                 "nutrition": {
                     "calories": nutrition_data[0],
-                    "protiens": nutrition_data[1],
-                    "fats": nutrition_data[2],
-                    "vitamins": nutrition_data[3],
-                    "minerals": nutrition_data[4],
-                    "quantity": nutrition_data[5]
+                    "proteins": nutrition_data[1],
+                    "carbohydrates": nutrition_data[2],
+                    "fats": nutrition_data[3],
+                    "sugar": nutrition_data[4],
+                    "vitamins": nutrition_data[5],
+                    "minerals": nutrition_data[6],
+                    "quantity": nutrition_data[7]
                 },
                 "record_id": record_id
             }), 200

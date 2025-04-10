@@ -772,9 +772,13 @@ const Record = () => {
             <p className="review-label-cal">Calories</p>
             <p className="review-value-cal">{nutrition?.calories || "N/A"} cal</p>
             <p className="review-label-prot">Proteins</p>
-            <p className="review-value-prot">{nutrition?.protiens || "N/A"}%</p>
+            <p className="review-value-prot">{nutrition?.proteins || "N/A"}%</p>
+            <p className="review-label-carb">Carbohydrates</p>
+            <p className="review-value-carb">{nutrition?.carbohydrates || "N/A"}%</p>
             <p className="review-label-fat">Fats</p>
             <p className="review-value-fat">{nutrition?.fats || "N/A"}%</p>
+            <p className="review-label-sug">Sugar</p>
+            <p className="review-value-sug">{nutrition?.sugar || "N/A"}%</p>
             <p className="review-label-vit">Vitamins</p>
             <p className="review-value-vit">{nutrition?.vitamins || "N/A"} </p>
             <p className="review-label-min">Minerals</p>

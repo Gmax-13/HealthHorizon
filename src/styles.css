@@ -1975,7 +1975,7 @@
 .review-box {
   position: absolute;
   width: 320px;
-  height: 500px;
+  height: 590px;
   left: 20px;
   top: 151px;
   background: #D9D9D9;
@@ -2043,7 +2043,7 @@
 }
 
 /* "Fats" (left=42, top=409) */
-.review-label-fat {
+.review-label-carb {
   font-family: 'Inter', sans-serif;
   position: absolute;
   left: 42px;
@@ -2053,7 +2053,7 @@
   color: #000000;
   margin: 0;
 }
-.review-value-fat {
+.review-value-carb {
   font-family: 'Inter', sans-serif;
   position: absolute;
   left: 45px;
@@ -2065,7 +2065,7 @@
 }
 
 /* "Vitamins" (left=42, top=456) */
-.review-label-vit {
+.review-label-fat {
   font-family: 'Inter', sans-serif;
   position: absolute;
   left: 42px;
@@ -2075,7 +2075,7 @@
   color: #000000;
   margin: 0;
 }
-.review-value-vit {
+.review-value-fat {
   font-family: 'Inter', sans-serif;
   position: absolute;
   left: 45px;
@@ -2086,7 +2086,7 @@
   margin: 0;
 }
 /* "Minerals" */
-.review-label-min {
+.review-label-sug {
   font-family: 'Inter', sans-serif;
   position: absolute;
   left: 42px;
@@ -2096,7 +2096,7 @@
   color: #000000;
   margin: 0;
 }
-.review-value-min {
+.review-value-sug {
   font-family: 'Inter', sans-serif;
   position: absolute;
   left: 45px;
@@ -2107,7 +2107,7 @@
   margin: 0;
 }
 
-.review-label-qty {
+.review-label-vit {
   font-family: 'Inter', sans-serif;
   position: absolute;
   left: 42px;
@@ -2117,11 +2117,53 @@
   color: #000000;
   margin: 0;
 }
-.review-value-qty {
+.review-value-vit {
   font-family: 'Inter', sans-serif;
   position: absolute;
   left: 45px;
   top: 466px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #434343;
+  margin: 0;
+}
+
+.review-label-min {
+  font-family: 'Inter', sans-serif;
+  position: absolute;
+  left: 42px;
+  top: 495px;
+  font-weight: 500;
+  font-size: 20px;
+  color: #000000;
+  margin: 0;
+}
+.review-value-min {
+  font-family: 'Inter', sans-serif;
+  position: absolute;
+  left: 45px;
+  top: 516px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #434343;
+  margin: 0;
+}
+
+.review-label-qty {
+  font-family: 'Inter', sans-serif;
+  position: absolute;
+  left: 42px;
+  top: 545px;
+  font-weight: 500;
+  font-size: 20px;
+  color: #000000;
+  margin: 0;
+}
+.review-value-qty {
+  font-family: 'Inter', sans-serif;
+  position: absolute;
+  left: 45px;
+  top: 566px;
   font-weight: 400;
   font-size: 14px;
   color: #434343;

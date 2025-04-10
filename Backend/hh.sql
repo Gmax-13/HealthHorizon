@@ -39,24 +39,27 @@ CREATE TABLE nutrition (
     food_item VARCHAR(255) PRIMARY KEY,
     calories INT NOT NULL,
 	proteins INT NOT NULL,
-    fats FLOAT NOT NULL,
+	carbohydrates INT NOT NULL,
+    fats INT NOT NULL,
+	sugar INT NOT NULL,
     vitamins TEXT NOT NULL,
 	minerals TEXT NOT NULL,
 	quantity VARCHAR NOT NULL 
 );
 SELECT * FROM nutrition;
-INSERT INTO nutrition (food_item, calories, protiens, fats, vitamins, minerals, quantity) VALUES
-('Biryani', 450, 20, 15.0, 'Vitamin A, Vitamin C', 'Iron', '1 cup'),
-('Dosa', 168, 3, 6.0, 'Vitamin B6, Vitamin C', 'Iron', '1 piece'),
-('Idli', 58, 2, 0.4, 'Vitamin B6', 'Iron', '1 piece'),
-('Palak Paneer', 350, 15, 25.0, 'Vitamin A, Vitamin C', 'Calcium, Iron', '1 cup'),
-('Shira', 250, 3, 10.0, 'Vitamin A', 'Calcium', '1 bowl'),
-('Chapati', 120, 4, 3.0, 'Vitamin B1, Vitamin B3', 'Iron', '1 piece'),
-('Gulab Jamun', 150, 2, 7.5, 'Vitamin A', 'Calcium', '1 piece'),
-('Jalebi', 150, 1, 5.0, 'Vitamin C', 'None', '1 piece'),
-('Poha', 180, 3, 5.0, 'Vitamin A, Vitamin C', 'Iron', '1 cup'),
-('Rice', 130, 2, 0.3, 'Vitamin B1, Vitamin B3', 'Iron', '1 cup');
+INSERT INTO nutrition (food_item, calories, proteins, carbohydrates, fats, sugar, vitamins, minerals, quantity) VALUES
+('Biryani', 220, 20, 55, 32, 2, 'Vitamin A: ~5%, Vitamin C: ~10%', 'Iron: ~15%, Calcium: ~7%', 'For 100 grams (protien may vary with ingredients)'),
+('Dosa', 168, 8, 17, 15, 2, 'Vitamin B6: ~8%, Vitamin C: ~4%', 'Iron: ~10%, Calcium: ~5%', 'For 1 Dosa'),
+('Idli', 60, 3, 85, 5, 1, 'Vitamin B6: ~6%, Vitamin C: ~2%', 'Iron: ~8%, Calcium: ~4%', 'For 1 Idli'),
+('Palak Paneer', 180, 11, 8, 15, 1, 'Vitamin A: ~40%, Vitamin C: ~15%', 'Calcium: ~20%, Iron: ~12%', 'For 100 grams'),
+('Shira', 200, 6, 60, 20, 25, 'B Vitamins: ~5%', 'Calcium: ~4%, Iron: ~3%', 'For 100 grams'),
+('Chapati', 120, 8, 73, 10, 1, 'B Vitamins(B1 & B3): ~8%', 'Iron: ~6%, Calcium: ~5%', 'For 1 Chapati'),
+('Gulab Jamun', 280, 6, 80, 14, 75, 'Vitamin A: ~2%', 'Calcium: ~3%, Iron: ~2%', 'For 1 Gulab Jamun'),
+('Jalebi', 320, 4, 65, 20, 55, 'Vitamin C: ~2%', 'Calcium: ~2%, Iron: ~2%', 'For 1 Jalebi '),
+('Poha', 160, 6, 75, 12, 3, 'Vitamin C: ~8%', 'Iron: ~10%, Calcium: ~5%', 'For 100 grams'),
+('Rice', 130, 3, 42, 1, 1, 'Thiamin (B1): ~10%', 'Iron: ~1%, Calcium: ~1%', 'For 100 grams');
 
+DROP TABLE nutrition
 --RECIPE SCREEN
 CREATE TABLE recommended (
     recommended_id SERIAL PRIMARY KEY,
