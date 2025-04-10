@@ -86,8 +86,6 @@ const Login = () => {
       <button className="login-button" onClick={handleLogin}>
         Log in
       </button>
-
-      <p className="forgot-password">Forgot password?</p>
     </div>
   );
 };
@@ -385,6 +383,10 @@ const SignupGoal = () => {
   const { signupData, updateSignupData } = useContext(SignupContext);
   const [goal, setGoal] = useState(""); // will be set to 1 or 2
 
+// Determine recommendation based on weight
+const weight = signupData.weight || 0; // Default to 0 if weight is not available
+const recommendation = weight > 75 ? "We recommend Weight Loss Plan" : "We recommend Weight Gain Plan";
+
   const handleNext = async () => {
     if (!goal) {
       alert("Please select a goal");
@@ -422,6 +424,8 @@ const SignupGoal = () => {
         <div className="vector"></div>
       </div>
       <h1 className="goal-title">What’s your goal?</h1>
+      {/* Recommendation Text */}
+      <p className="goal-recommendation">{recommendation}</p>
       {/* Option for Lose Weight */}
       <div
         className={`goal-box lose-box ${goal === 1 ? "selected" : ""}`}
@@ -483,6 +487,17 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [dateString, setDateString] = useState("");
   const [weekDays, setWeekDays] = useState([]);
+  const [planFill, setPlanFill] = useState(0);
+  // Constant calorie goal
+  const planGoal = 1000;
+
+  // State for macros averages
+  const [macroCarbs, setMacroCarbs] = useState(0);
+  const [macroProteins, setMacroProteins] = useState(0);
+  const [macroFats, setMacroFats] = useState(0);
+
+  // State for streak
+  const [streak, setStreak] = useState(0);
 
   useEffect(() => {
     const today = new Date();
@@ -494,41 +509,82 @@ const Dashboard = () => {
     const ordinal = getOrdinal(day);
     setDateString(`${weekday}, ${day}${ordinal} ${month}`);
 
-    // Generate days for the current week
+    // Generate days for the current week (starting from Sunday)
     const generateWeekDays = () => {
       const week = [];
       const startOfWeek = new Date(today);
-      startOfWeek.setDate(today.getDate() - today.getDay()); // Start from Sunday
+      startOfWeek.setDate(today.getDate() - today.getDay());
       
       for (let i = 0; i < 7; i++) {
         const date = new Date(startOfWeek);
         date.setDate(startOfWeek.getDate() + i);
-        
         week.push({
-          name: date.toLocaleDateString("en-US", { weekday: "short" }), // Mon, Tue, etc.
-          number: date.getDate(), // 1, 2, 3, ...
-          isToday: date.toDateString() === today.toDateString(), // Check if it's today
+          name: date.toLocaleDateString("en-US", { weekday: "short" }),
+          number: date.getDate(),
+          isToday: date.toDateString() === today.toDateString(),
         });
       }
       return week;
     };
 
     setWeekDays(generateWeekDays());
+
+    // Load initial planFill from localStorage (if any)
+    const storedFill = parseInt(localStorage.getItem("planFill"), 10) || 0;
+    setPlanFill(storedFill);
+
+    // Fetch today's total calories from API
+    fetch("http://localhost:5000/api/calories_today")
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log("Today's fill data:", data);
+          localStorage.setItem("planFill", data.fill);
+        })
+        .catch(error => console.error("Error fetching today's calories:", error));
+
+    // Fetch today's macro averages from API
+    fetch("http://localhost:5000/api/macros_today")
+      .then(response => response.json())
+      .then(data => {
+        setMacroCarbs(data.avg_carbs);
+        setMacroProteins(data.avg_proteins);
+        setMacroFats(data.avg_fats);
+      })
+      .catch(error => console.error("Error fetching macros:", error));
+
+    // Fetch streak from API
+    fetch("http://localhost:5000/api/streak")
+      .then(response => response.json())
+      .then(data => {
+        setStreak(data.streak);
+      })
+      .catch(error => console.error("Error fetching streak:", error));
   }, []);
 
+  // Helper for ordinal suffix
   const getOrdinal = (n) => {
     if (n > 3 && n < 21) return "th";
     switch (n % 10) {
-      case 1:
-        return "st";
-      case 2:
-        return "nd";
-      case 3:
-        return "rd";
-      default:
-        return "th";
+      case 1: return "st";
+      case 2: return "nd";
+      case 3: return "rd";
+      default: return "th";
     }
   };
+
+  // Ensure planFill is a number.
+  const safePlanFill = Number(planFill) || 0;
+  // Calculate progress percentage (cap at 100%)
+  const progress = Math.min((safePlanFill / planGoal) * 100, 100);
+  
+  // Set circle circumference (adjust as needed) and compute dash offset
+  const circumference = 283;
+  const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   return (
     <div className="dashboard-container">
@@ -554,9 +610,32 @@ const Dashboard = () => {
         ))}
       </div>
 
-      {/* Calorie Ring */}
-      <div className="calorie-ring"></div>
-      
+      {/* Dynamic Calorie Ring */}
+      <div className="calorie-ring">
+        <svg width="175" height="175" viewBox="0 0 100 100">
+          {/* Background Circle */}
+          <circle cx="50" cy="50" r="45" stroke="#ddd" strokeWidth="8" fill="none" />
+          {/* Progress Circle with 2s transition */}
+          <circle
+            cx="50"
+            cy="50"
+            r="45"
+            stroke="green"
+            strokeWidth="8"
+            fill="none"
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            strokeLinecap="round"
+            transform="rotate(-90 50 50)"
+            style={{ transition: "stroke-dashoffset 4s ease" }}
+          />
+          {/* Calorie Text */}
+          <text x="50" y="50" textAnchor="middle" dominantBaseline="middle" fontSize="12">
+            {safePlanFill} / {planGoal} kcal
+          </text>
+        </svg>
+      </div>
+
       {/* Macro Labels */}
       <div className="macros-label-carbs">Carbs</div>
       <div className="macros-label-protein">Protein</div>
@@ -564,17 +643,17 @@ const Dashboard = () => {
       
       {/* Macro Circles and Text */}
       <div className="macro-circle-1"></div>
-      <div className="macro-text-1">124 g</div>
+      <div className="macro-text-1">{macroCarbs}%</div>
       <div className="macro-circle-2"></div>
-      <div className="macro-text-2">108 g</div>
+      <div className="macro-text-2">{macroProteins}%</div>
       <div className="macro-circle-3"></div>
-      <div className="macro-text-3">203 g</div>
+      <div className="macro-text-3">{macroFats}%</div>
       
       {/* Calorie Tracking (Streak) */}
       <div className="calorie-streak-box"></div>
       <div className="calorie-tracking-label">Calorie tracking</div>
       <div className="calorie-streak-text">Streak</div>
-      <div className="streak-number">03</div>
+      <div className="streak-number">{streak}</div>
       <div className="streak-days">Days</div>
 
       {/* Bottom Navigation */}
@@ -605,44 +684,31 @@ const Dashboard = () => {
 const Profile = () => {
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+    // Clear stored user data and token from localStorage
+    localStorage.clear();
+    // Navigate to the login page
+    navigate("/login");
+  };
+
   return (
     <div className="profile-container">
-      {/* Back Button */}
-      <div className="back-arrow" onClick={() => navigate("/dashboard")}>
-        <div className="vector"></div>
+      <div className="header">
+        <button className="back-button" onClick={() => navigate("/dashboard")}>
+          &#8592;
+        </button>
+        <h1 className="title">Settings</h1>
       </div>
-
-      {/* Profile Heading */}
-      <h1 className="profile-title">Profile</h1>
-
-      {/* Profile Image */}
-      <div className="profile-image">
-        <img src="/profile.png" alt="User Profile" />
+      <div className="profile-content">
+        <div className="profile-image">
+          <img src="/profile.png" alt="User Profile" />
+        </div>
+        <h2 className="greeting">Thank you for using Health Horizon</h2>
+        <button className="logout-button" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
-
-      {/* User Information */}
-      <h2 className="user-name">John Doe</h2>
-      <div className="user-details">
-        <span>19 years</span> <span>170 cm</span> <span>55 kg</span>
-      </div>
-
-      {/* Edit Profile */}
-      <p className="edit-profile">Edit profile</p>
-
-      {/* Streak Card */}
-      <div className="streak-card">
-        <p className="streak-subtitle">Calorie tracking</p>
-        <p className="streak-title">Streak<span> </span>
-          <span>90</span> Days
-        </p>
-      </div>
-
-      {/* Invite Friends Card */}
-      <div className="invite-card">
-        <p>Invite your friends to Health Horizon</p>
-        <span className="share-icon">🔗</span>
-      </div>
-      </div>
+    </div>
   );
 };
 

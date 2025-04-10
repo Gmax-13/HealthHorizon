@@ -381,6 +381,17 @@
   margin: 0;
 }
 
+.goal-recommendation {
+  position: absolute;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #318516;
+  margin-bottom: 10px;
+  top: 425px;
+  left: 52px;
+}
+
 /* Lose Box (width=150, height=90, left=20, top=334) */
 .goal-box {
   position: absolute;
@@ -839,16 +850,12 @@
   color: #000000;
 }
 
-/* Calorie Ring */
 .calorie-ring {
   position: absolute;
   width: 175px;
   height: 175px;
   left: 87px;
   top: 233px;
-  background: url("IMG_2628.png");
-  background-size: cover;
-  border-radius: 50%;
 }
 
 /* Macro Circles and Text */
@@ -868,7 +875,7 @@
   position: absolute;
   width: 50px;
   height: 17px;
-  left: 58px;
+  left: 54px;
   top: 469px;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
@@ -885,7 +892,7 @@
   position: absolute;
   width: 50px;
   height: 17px;
-  left: 169px;
+  left: 168px;
   top: 469px;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
@@ -902,7 +909,7 @@
   position: absolute;
   width: 50px;
   height: 17px;
-  left: 280px;
+  left: 278px;
   top: 469px;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
@@ -965,7 +972,7 @@
   position: absolute;
   width: 34px;
   height: 17px;
-  left: 250px;
+  left: 258px;
   top: 650px;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
@@ -1844,7 +1851,7 @@
 .review-box {
   position: absolute;
   width: 320px;
-  height: 590px;
+  height: 605px;
   left: 20px;
   top: 151px;
   background: #D9D9D9;
@@ -2104,111 +2111,80 @@
   background: #286c12;
 }
 
-/* Forgot Password */
-.forgot-password {
-  font-size: 14px;
-  font-weight: 700;
-  color: #318516;
-  margin-top: 10px;
-  cursor: pointer;
-  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-}
-
-.forgot-password:hover {
-  text-decoration: underline;
-}
-
 /*------ Profile ------*/
+/* Container styling */
 .profile-container {
   width: 360px;
-  margin: 0 auto;
   height: 800px;
+  padding: 20px;
+  background: #ffffff;
+  font-family: 'Inter', sans-serif;
+  color: #333;
+  overflow-y: scroll; /* Enables scrolling */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer/Edge */
+}
+  
+.profile-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+/* Header with back button and title */
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.title {
+  font-size: 24px;
+  margin: 0;
+  flex-grow: 1;
+  text-align: center;
+  color: #318516;
+}
+
+/* Content area: profile image, greeting and logout button */
+.profile-content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  background: #ffffff;
-}
-
-/* Title */
-.profile-title {
-  font-size: 24px;
-  font-weight: 700;
-  margin-top: 40px;
-}
-
-/* Profile Image */
-.profile-image {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
 }
 
 .profile-image img {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
+  margin-bottom: 20px;
+  border: 4px solid #318516;
 }
 
-/* User Info */
-.user-name {
-  text-align: center;
+.greeting {
   font-size: 18px;
-  font-weight: bold;
-}
-
-.user-details {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  font-size: 14px;
-  color: #666;
-}
-
-/* Edit Profile */
-.edit-profile {
   text-align: center;
-  color: #318516;
-  font-size: 14px;
-  cursor: pointer;
+  margin-bottom: 40px;
+  color: #333;
 }
-
-/* Streak Card */
-.streak-card {
-  background: #318516;
-  color: #fff;
-  padding: 15px;
-  margin: 20px auto;
-  border-radius: 10px;
-  text-align: center;
-  width: 90%;
-}
-
-.streak-days {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.streak-number {
-  font-size: 24px;
+.logout-button {
+  background: #318516; /* Use a similar green to your app's highlights */
+  border: none;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Invite Friends Card */
-.invite-card {
-  background: #318516;
-  color: #fff;
-  padding: 15px;
-  margin: 10px auto;
-  border-radius: 10px;
-  text-align: center;
-  width: 90%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.logout-button:hover {
+  background: #276a12; /* slightly darker on hover */
+  transform: translateY(-2px);
 }
 
-.share-icon {
-  font-size: 20px;
+.logout-button:active {
+  transform: translateY(0);
 }

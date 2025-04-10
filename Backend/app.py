@@ -254,6 +254,47 @@ def get_calories_today():
         print("Error fetching today's calories:", e)
         return jsonify({"error": "Error calculating fill"}), 500
 
+# New endpoint to fetch today's average macros from nutrition
+@app.route('/api/macros_today', methods=['GET'])
+def get_macros_today():
+    try:
+        cursor = conn.cursor()
+        query = """
+            SELECT AVG(n.carbohydrates), AVG(n.proteins), AVG(n.fats)
+            FROM food_records fr
+            JOIN nutrition n ON fr.food_item = n.food_item
+            WHERE DATE(created_at) = CURRENT_DATE;
+        """
+        cursor.execute(query)
+        result = cursor.fetchone()
+        cursor.close()
+        avg_carbs = round(result[0]) if result and result[0] is not None else 0
+        avg_proteins = round(result[1]) if result and result[1] is not None else 0
+        avg_fats = round(result[2]) if result and result[2] is not None else 0
+        return jsonify({
+            "avg_carbs": avg_carbs,
+            "avg_proteins": avg_proteins,
+            "avg_fats": avg_fats
+        }), 200
+    except Exception as e:
+        print("Error fetching today's macros:", e)
+        return jsonify({"error": "Error calculating macros"}), 500
+
+# New endpoint to calculate the streak (number of distinct days with records)
+@app.route('/api/streak', methods=['GET'])
+def get_streak():
+    try:
+        cursor = conn.cursor()
+        query = "SELECT COUNT(DISTINCT DATE(created_at)) FROM food_records;"
+        cursor.execute(query)
+        result = cursor.fetchone()
+        cursor.close()
+        streak = result[0] if result and result[0] is not None else 0
+        return jsonify({"streak": streak}), 200
+    except Exception as e:
+        print("Error fetching streak:", e)
+        return jsonify({"error": "Error calculating streak"}), 500
+
 @app.route('/static/images/<path:filename>')
 def serve_image(filename):
     return send_from_directory("static/images", filename)
