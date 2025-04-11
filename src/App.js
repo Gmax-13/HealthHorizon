@@ -754,7 +754,7 @@ const Record = () => {
             audio={false}
             ref={webcamRef}
             screenshotFormat="image/jpeg"
-            videoConstraints={{ facingMode: "user" }}
+            videoConstraints={{ facingMode: "environment" }}
             className="webcam-view"
           />
         )}
