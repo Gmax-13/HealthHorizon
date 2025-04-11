@@ -407,7 +407,7 @@ const recommendation = weight > 75 ? "We recommend Weight Loss Plan" : "We recom
       const result = await response.json();
       if (response.ok) {
         // Signup successful; navigate to the dashboard
-        navigate("/dashboard");
+        navigate("/login");
       } else {
         alert(result.error || "Signup failed");
       }
