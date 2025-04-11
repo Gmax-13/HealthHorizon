@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback} from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import Webcam from "react-webcam";
 import { useEffect } from "react";
@@ -960,8 +960,8 @@ const Plan = () => {
     setTomorrowName(dayNames[(dayIndex + 1) % 7]);
   }, []);
 
-  // Function to fetch plan items for a given day
-  const fetchPlanItems = (day) => {
+  // Memoized function to fetch plan items for a given day
+  const fetchPlanItems = useCallback((day) => {
     fetch(`${process.env.REACT_APP_API_URL}/api/plan_display?plan_id=${planId}`)
       .then(response => {
         if (!response.ok) {
@@ -983,7 +983,7 @@ const Plan = () => {
         localStorage.setItem("planGoal", goal);
       })
       .catch(error => console.error("Error fetching plan display items:", error));
-  };
+  }, [planId]); // Dependencies: planId (since the API call depends on it)
 
   // useEffect to fetch plan items when selectedDay changes,
   // but only fetch if we don't have them in cache already.
@@ -1004,7 +1004,7 @@ const Plan = () => {
       // Otherwise, fetch the plan items and cache them.
       fetchPlanItems(selectedDay);
     }
-  }, [planId, selectedDay, planCache, fetchPlanItems]); // Added fetchPlanItems to dependency array
+  }, [planId, selectedDay, planCache, fetchPlanItems]); // fetchPlanItems is now memoized
 
   // Fetch today's filled calories (only for "today" view)
   useEffect(() => {
