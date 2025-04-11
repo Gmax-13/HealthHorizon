@@ -19,7 +19,7 @@ from tensorflow.keras.preprocessing import image
 load_dotenv()
 
 app = Flask(__name__, static_folder="static")
-CORS(app)  # Allows requests from a different origin (e.g., your React app)
+CORS(app, resources={r"/*": {"origins": os.getenv("ALLOWED_ORIGIN", "*")}})  # Allows requests from a different origin (e.g., your React app)
 bcrypt = Bcrypt(app)
 
 # JWT Configuration
@@ -300,5 +300,5 @@ def serve_image(filename):
     return send_from_directory("static/images", filename)
 
 # Run Flask App
-if __name__ == '__main__':
-    app.run(debug=True)
+#if __name__ == '__main__':
+#    app.run(debug=True)

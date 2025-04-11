@@ -534,7 +534,7 @@ const Dashboard = () => {
     setPlanFill(storedFill);
 
     // Fetch today's total calories from API
-    fetch("http://localhost:5000/api/calories_today")
+    fetch(`${process.env.REACT_APP_API_URL}/api/calories_today`)
         .then(response => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -548,7 +548,7 @@ const Dashboard = () => {
         .catch(error => console.error("Error fetching today's calories:", error));
 
     // Fetch today's macro averages from API
-    fetch("http://localhost:5000/api/macros_today")
+    fetch(`${process.env.REACT_APP_API_URL}/api/macros_today`)
       .then(response => response.json())
       .then(data => {
         setMacroCarbs(data.avg_carbs);
@@ -558,7 +558,7 @@ const Dashboard = () => {
       .catch(error => console.error("Error fetching macros:", error));
 
     // Fetch streak from API
-    fetch("http://localhost:5000/api/streak")
+    fetch(`${process.env.REACT_APP_API_URL}/api/streak`)
       .then(response => response.json())
       .then(data => {
         setStreak(data.streak);
@@ -754,7 +754,7 @@ const Record = () => {
     alert("Image is being processed! Please wait.");
 
     try {
-      const response = await fetch("http://localhost:5000/predict", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: capturedImage }),
@@ -867,7 +867,7 @@ const Recipe = () => {
   const plan_id = 1;
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/recommended?plan_id=${plan_id}`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/recommended?plan_id=${plan_id}`) // Changed from http://localhost:5000
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -894,7 +894,7 @@ const Recipe = () => {
       {mainRecipe && (
         <div 
           className="recipe-main" 
-          style={{ backgroundImage: `url(http://localhost:5000/static/images/${mainRecipe.image})` }}
+          style={{ backgroundImage: `url(${process.env.REACT_APP_API_URL}/static/images/${mainRecipe.image})` }} // Changed from http://localhost:5000
           onClick={() => setSelectedRecipe(mainRecipe)}
         >
           <div className="recipe-title">{mainRecipe.recipe_name}</div>
@@ -908,7 +908,7 @@ const Recipe = () => {
             key={recipe.recommended_id}
             className="recipe-item"
             onClick={() => setSelectedRecipe(recipe)}
-            style={{ backgroundImage: `url(http://localhost:5000/static/images/${recipe.image})` }}
+            style={{ backgroundImage: `url(${process.env.REACT_APP_API_URL}/static/images/${recipe.image})` }} // Changed from http://localhost:5000
           >
             <div className="recipe-name">{recipe.recipe_name}</div>
           </div>
@@ -920,7 +920,7 @@ const Recipe = () => {
         <div className="overlay" onClick={closeOverlay}>
           <div className="overlay-content" onClick={(e) => e.stopPropagation()}>
             <img
-              src={`http://localhost:5000/static/images/${selectedRecipe.image}`}
+              src={`${process.env.REACT_APP_API_URL}/static/images/${selectedRecipe.image}`} // Changed from http://localhost:5000
               alt={selectedRecipe.recipe_name}
               className="overlay-image"
             />
@@ -998,7 +998,7 @@ const Plan = () => {
 
   // Function to fetch plan items for a given day
   const fetchPlanItems = (day) => {
-    fetch(`http://localhost:5000/api/plan_display?plan_id=${planId}`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/plan_display?plan_id=${planId}`)
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -1045,7 +1045,7 @@ const Plan = () => {
   // Fetch today's filled calories (only for "today" view)
   useEffect(() => {
     if (selectedDay === "today") {
-      fetch("http://localhost:5000/api/calories_today")
+      fetch(`${process.env.REACT_APP_API_URL}/api/calories_today`)
         .then(response => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -1128,7 +1128,7 @@ const Plan = () => {
               {planItems.breakfast.food_item_name} • about {planItems.breakfast.calorie} calories
             </p>
             <img
-              src={`http://localhost:5000/static/images/${planItems.breakfast.image}`}
+              src={`${process.env.REACT_APP_API_URL}/static/images/${planItems.breakfast.image}`}
               alt={planItems.breakfast.food_item_name}
               className="plan-breakfast-img"
             />
@@ -1145,7 +1145,7 @@ const Plan = () => {
               {planItems.lunch.food_item_name} • about {planItems.lunch.calorie} calories
             </p>
             <img
-              src={`http://localhost:5000/static/images/${planItems.lunch.image}`}
+              src={`${process.env.REACT_APP_API_URL}/static/images/${planItems.lunch.image}`}
               alt={planItems.lunch.food_item_name}
               className="plan-lunch-img"
             />
@@ -1162,7 +1162,7 @@ const Plan = () => {
               {planItems.dinner.food_item_name} • about {planItems.dinner.calorie} calories
             </p>
             <img
-              src={`http://localhost:5000/static/images/${planItems.dinner.image}`}
+              src={`${process.env.REACT_APP_API_URL}/static/images/${planItems.dinner.image}`}
               alt={planItems.dinner.food_item_name}
               className="plan-dinner-img"
             />

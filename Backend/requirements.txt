@@ -1,11 +1,11 @@
 flask
+psycopg2-binary
+numpy
+tensorflow-cpu
+pillow
+werkzeug
 flask-cors
 flask-bcrypt
 flask-jwt-extended
-psycopg2-binary
-tensorflow
-pillow
-numpy
-werkzeug
 python-dotenv
 gunicorn
