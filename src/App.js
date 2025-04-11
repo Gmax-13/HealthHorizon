@@ -447,42 +447,6 @@ const recommendation = weight > 75 ? "We recommend Weight Loss Plan" : "We recom
   );
 };
 
-
-// A component to compute and render the 7 day circles dynamically.
-const WeekDays = () => {
-  const [weekDays, setWeekDays] = useState([]);
-
-  useEffect(() => {
-    const today = new Date();
-    // Get current day index (0=Sunday, 1=Monday, etc.)
-    const currentDay = today.getDay();
-    const days = [];
-    for (let i = 0; i < 7; i++) {
-      const dayDate = new Date();
-      // Adjust so that the week starts on Sunday
-      dayDate.setDate(today.getDate() - currentDay + i);
-      // Get short weekday name (we only need the first letter)
-      const dayLetter = dayDate.toLocaleDateString("en-US", { weekday: "short" }).charAt(0);
-      const dayNumber = dayDate.getDate();
-      days.push({ dayLetter, dayNumber });
-    }
-    setWeekDays(days);
-  }, []);
-
-  return (
-    <>
-      {weekDays.map((day, index) => (
-        <React.Fragment key={index}>
-          {/* Each element uses a class with an index (e.g., day-circle-1, day-label-1, day-number-1) */}
-          <div className={`day-circle-${index + 1}`}></div>
-          <div className={`day-label-${index + 1}`}>{day.dayLetter}</div>
-          <div className={`day-number-${index + 1}`}>{day.dayNumber}</div>
-        </React.Fragment>
-      ))}
-    </>
-  );
-};
-
 const Dashboard = () => {
   const navigate = useNavigate();
   const [dateString, setDateString] = useState("");
@@ -1040,7 +1004,7 @@ const Plan = () => {
       // Otherwise, fetch the plan items and cache them.
       fetchPlanItems(selectedDay);
     }
-  }, [planId, selectedDay, planCache]);
+  }, [planId, selectedDay, planCache, fetchPlanItems]); // Added fetchPlanItems to dependency array
 
   // Fetch today's filled calories (only for "today" view)
   useEffect(() => {
