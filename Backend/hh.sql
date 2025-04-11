@@ -25,15 +25,13 @@ INSERT INTO Plan (plan_id, plan_type, plan_name)
 VALUES 
 (1, 'Weight Loss', 'Weight Loss Plan'),
 (2, 'Weight Gain', 'Weight Gain Plan');
-SELECT * FROM Plan
+SELECT * FROM User1
 
 -- RECORD SCREEN
 CREATE TABLE food_records (
     id SERIAL PRIMARY KEY,
-	UserId INT NOT NULL,
     food_item VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	CONSTRAINT fk_user FOREIGN KEY (UserID) REFERENCES User1(UserID)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 SELECT * FROM food_records;
 DROP TABLE food_records;
