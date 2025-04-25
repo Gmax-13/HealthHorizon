@@ -1,10 +1,9 @@
-import React, { useRef, useState, useCallback} from "react";
+import React, { useRef, useState, useCallback } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import Webcam from "react-webcam";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import "./styles.css";
-import { useContext } from "react";
-import { SignupContext } from "./SignupContext";
+import { SignupContext, SignupContextProvider } from "./SignupContext";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -30,10 +29,19 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
     setError("");
+    setLoading(true);
+
+    if (!email || !password) {
+      setError("Please enter both email and password.");
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/login`, {
@@ -43,54 +51,74 @@ const Login = () => {
       });
 
       const data = await response.json();
+      console.log("API Response:", data);
 
-      if (response.ok) {
-        // Store the userId and planId instead of the JWT
+      if (response.ok && data.success) {
+        localStorage.setItem("token", data.token);
         localStorage.setItem("userId", data.user_id);
         localStorage.setItem("planId", data.plan_id);
+        console.log("Stored in localStorage:", {
+          token: data.token,
+          userId: data.user_id,
+          planId: data.plan_id,
+        });
+
+        const storedUserId = localStorage.getItem("userId");
+        const storedPlanId = localStorage.getItem("planId");
+        console.log("Verified localStorage:", { storedUserId, storedPlanId });
+
         navigate("/dashboard");
       } else {
         setError(data.message || "Login failed. Please try again.");
       }
     } catch (err) {
+      console.error("Network error:", err);
       setError("Network error. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="login-container">
       <div className="back-arrow" onClick={() => navigate("/signup-gender")}>
-        <div className="vector"></div>
+        <div className="vector">←</div>
       </div>
-      <h2 className="login-title">Log in</h2>
+      <h2 className="login-title">Log In</h2>
 
       {error && <p className="error-message">{error}</p>}
 
-      <div className="input-container">
-        <label className="input-label">Email</label>
-        <input
-          type="email"
-          className="login-input"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
+      <form onSubmit={handleLogin}>
+        <div className="input-container">
+          <label className="input-label">Email</label>
+          <input
+            type="email"
+            className="login-input"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value.trim())}
+            disabled={loading}
+            required
+          />
+        </div>
 
-      <div className="input-container">
-        <label className="input-label">Password</label>
-        <input
-          type="password"
-          className="login-input"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
+        <div className="input-container">
+          <label className="input-label">Password</label>
+          <input
+            type="password"
+            className="login-input"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={loading}
+            required
+          />
+        </div>
 
-      <button className="login-button" onClick={handleLogin}>
-        Log in
-      </button>
+        <button type="submit" className="login-button" disabled={loading}>
+          {loading ? "Logging in..." : "Log In"}
+        </button>
+      </form>
     </div>
   );
 };
@@ -98,7 +126,6 @@ const Login = () => {
 const SignupEmail = () => {
   const navigate = useNavigate();
   const { signupData, updateSignupData } = useContext(SignupContext);
-  // Initialize email from context if it exists, else use empty string
   const [email, setEmail] = useState(signupData.email || "");
 
   const handleNext = () => {
@@ -106,7 +133,6 @@ const SignupEmail = () => {
       alert("Please enter your email");
       return;
     }
-    // Update the global signup context with the email value
     updateSignupData({ email });
     navigate("/signup-name");
   };
@@ -139,7 +165,6 @@ const SignupEmail = () => {
 const SignupName = () => {
   const navigate = useNavigate();
   const { signupData, updateSignupData } = useContext(SignupContext);
-  // Initialize name from context if available
   const [name, setName] = useState(signupData.name || "");
 
   const handleNext = () => {
@@ -147,7 +172,6 @@ const SignupName = () => {
       alert("Please enter your name");
       return;
     }
-    // Update the global context with the name value
     updateSignupData({ name });
     navigate("/signup-password");
   };
@@ -171,19 +195,15 @@ const SignupName = () => {
         onChange={(e) => setName(e.target.value)}
       />
       <div className="next-btn" onClick={handleNext}></div>
-      <div className="next-text" onClick={handleNext}>
-        Next
-      </div>
+      <div className="next-text" onClick={handleNext}>Next</div>
       <div className="footer"></div>
     </div>
   );
 };
 
-
 const SignupPassword = () => {
   const navigate = useNavigate();
   const { signupData, updateSignupData } = useContext(SignupContext);
-  // Initialize password from context if available
   const [password, setPassword] = useState(signupData.password || "");
 
   const handleNext = () => {
@@ -191,7 +211,6 @@ const SignupPassword = () => {
       alert("Please enter a password");
       return;
     }
-    // Update the global context with the password value
     updateSignupData({ password });
     navigate("/signup-gender");
   };
@@ -215,9 +234,7 @@ const SignupPassword = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <div className="next-btn" onClick={handleNext}></div>
-      <div className="next-text" onClick={handleNext}>
-        Next
-      </div>
+      <div className="next-text" onClick={handleNext}>Next</div>
       <div className="footer"></div>
     </div>
   );
@@ -226,12 +243,10 @@ const SignupPassword = () => {
 const SignupGender = () => {
   const navigate = useNavigate();
   const { signupData, updateSignupData } = useContext(SignupContext);
-  // Initialize gender from context if available
   const [gender, setGender] = useState(signupData.gender || "");
 
   const handleNext = () => {
     if (gender) {
-      // Update the global context with the selected gender
       updateSignupData({ gender });
       navigate("/signup-age");
     } else {
@@ -245,32 +260,27 @@ const SignupGender = () => {
         <div className="vector"></div>
       </div>
       <p className="gender-title">What’s your biological gender?</p>
-      {/* Box for Male */}
       <div
         className={`gender-box male-box ${gender === "male" ? "selected" : ""}`}
         onClick={() => setGender("male")}
       >
         <p className="male-text">Male</p>
       </div>
-      {/* Box for Female */}
       <div
         className={`gender-box female-box ${gender === "female" ? "selected" : ""}`}
         onClick={() => setGender("female")}
       >
         <p className="female-text">Female</p>
       </div>
-      {/* Next Button */}
       <div className="gender-next-btn" onClick={handleNext}></div>
       <p className="gender-next-text" onClick={handleNext}>Next</p>
     </div>
   );
 };
 
-
 const SignupAge = () => {
   const navigate = useNavigate();
   const { signupData, updateSignupData } = useContext(SignupContext);
-  // Initialize age from context if available
   const [age, setAge] = useState(signupData.age || "");
 
   const handleNext = () => {
@@ -278,7 +288,6 @@ const SignupAge = () => {
       alert("Please select your age");
       return;
     }
-    // Update the global context with the selected age
     updateSignupData({ age });
     navigate("/signup-measurements");
   };
@@ -313,8 +322,6 @@ const SignupAge = () => {
 const SignupMeasurements = () => {
   const navigate = useNavigate();
   const { signupData, updateSignupData } = useContext(SignupContext);
-
-  // Initialize state from context if available
   const [heightFt, setHeightFt] = useState(signupData.height_ft || "");
   const [heightInch, setHeightInch] = useState(signupData.height_inch || "");
   const [weight, setWeight] = useState(signupData.weight || "");
@@ -328,14 +335,11 @@ const SignupMeasurements = () => {
       alert("Please enter valid numeric values");
       return;
     }
-    
-    // Update the global context with keys matching the database
-    updateSignupData({ 
-      height_ft: heightFt, 
-      height_inch: heightInch, 
-      weight: weight 
+    updateSignupData({
+      height_ft: heightFt,
+      height_inch: heightInch,
+      weight: weight,
     });
-    
     navigate("/signup-goal");
   };
 
@@ -364,7 +368,6 @@ const SignupMeasurements = () => {
       />
       <div className="ft-text measurement-ft-text">Ft</div>
       <div className="inch-text measurement-inch-text">Inch</div>
-      
       <p className="measurement-weight-title">What’s your current weight?</p>
       <input
         type="text"
@@ -375,7 +378,6 @@ const SignupMeasurements = () => {
         onChange={(e) => setWeight(e.target.value)}
       />
       <div className="kg-text measurement-kg-text">KG</div>
-
       <div className="next-btn-measure" onClick={handleNext}></div>
       <div className="next-text-measure" onClick={handleNext}>Next</div>
       <div className="footer"></div>
@@ -386,21 +388,16 @@ const SignupMeasurements = () => {
 const SignupGoal = () => {
   const navigate = useNavigate();
   const { signupData, updateSignupData } = useContext(SignupContext);
-  const [goal, setGoal] = useState(""); // will be set to 1 or 2
-
-// Determine recommendation based on weight
-const weight = signupData.weight || 0; // Default to 0 if weight is not available
-const recommendation = weight > 75 ? "We recommend Weight Loss Plan" : "We recommend Weight Gain Plan";
+  const [goal, setGoal] = useState("");
+  const weight = signupData.weight || 0;
+  const recommendation = weight > 75 ? "We recommend Weight Loss Plan" : "We recommend Weight Gain Plan";
 
   const handleNext = async () => {
     if (!goal) {
       alert("Please select a goal");
       return;
     }
-    // Update the context with the selected goal (numeric)
     updateSignupData({ goal });
-
-    // Prepare final signup data, merging with previous steps
     const finalSignupData = { ...signupData, goal };
 
     try {
@@ -411,7 +408,6 @@ const recommendation = weight > 75 ? "We recommend Weight Loss Plan" : "We recom
       });
       const result = await response.json();
       if (response.ok) {
-        // Signup successful; navigate to the dashboard
         navigate("/login");
       } else {
         alert(result.error || "Signup failed");
@@ -424,28 +420,23 @@ const recommendation = weight > 75 ? "We recommend Weight Loss Plan" : "We recom
 
   return (
     <div className="signup-goal-screen">
-      {/* Back Button */}
       <div className="back-arrow" onClick={() => navigate("/signup-measurements")}>
         <div className="vector"></div>
       </div>
       <h1 className="goal-title">What’s your goal?</h1>
-      {/* Recommendation Text */}
       <p className="goal-recommendation">{recommendation}</p>
-      {/* Option for Lose Weight */}
       <div
         className={`goal-box lose-box ${goal === 1 ? "selected" : ""}`}
         onClick={() => setGoal(1)}
       >
         <p className="lose-text">Lose weight</p>
       </div>
-      {/* Option for Gain Weight */}
       <div
         className={`goal-box gain-box ${goal === 2 ? "selected" : ""}`}
         onClick={() => setGoal(2)}
       >
         <p className="gain-text">Gain weight</p>
       </div>
-      {/* Next Button */}
       <div className="goal-next-btn" onClick={handleNext}></div>
       <p className="goal-next-text" onClick={handleNext}>Next</p>
     </div>
@@ -457,33 +448,24 @@ const Dashboard = () => {
   const [dateString, setDateString] = useState("");
   const [weekDays, setWeekDays] = useState([]);
   const [planFill, setPlanFill] = useState(0);
-  // Constant calorie goal
   const planGoal = 1000;
-
-  // State for macros averages
   const [macroCarbs, setMacroCarbs] = useState(0);
   const [macroProteins, setMacroProteins] = useState(0);
   const [macroFats, setMacroFats] = useState(0);
-
-  // State for streak
   const [streak, setStreak] = useState(0);
 
   useEffect(() => {
     const today = new Date();
-    
-    // Set the main date title
     const weekday = today.toLocaleDateString("en-US", { weekday: "long" });
     const day = today.getDate();
     const month = today.toLocaleDateString("en-US", { month: "long" });
     const ordinal = getOrdinal(day);
     setDateString(`${weekday}, ${day}${ordinal} ${month}`);
 
-    // Generate days for the current week (starting from Sunday)
     const generateWeekDays = () => {
       const week = [];
       const startOfWeek = new Date(today);
       startOfWeek.setDate(today.getDate() - today.getDay());
-      
       for (let i = 0; i < 7; i++) {
         const date = new Date(startOfWeek);
         date.setDate(startOfWeek.getDate() + i);
@@ -498,44 +480,38 @@ const Dashboard = () => {
 
     setWeekDays(generateWeekDays());
     const userId = localStorage.getItem("userId");
-    // Load initial planFill from localStorage (if any)
     const storedFill = parseInt(localStorage.getItem("planFill"), 10) || 0;
     setPlanFill(storedFill);
 
-    // Fetch today's total calories from API
     fetch(`${process.env.REACT_APP_API_URL}/api/calories_today?user_id=${userId}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log("Today's fill data:", data);
-          localStorage.setItem("planFill", data.fill);
-        })
-        .catch(error => console.error("Error fetching today's calories:", error));
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Today's fill data:", data);
+        localStorage.setItem("planFill", data.fill);
+        setPlanFill(data.fill);
+      })
+      .catch((error) => console.error("Error fetching today's calories:", error));
 
-    // Fetch today's macro averages from API
     fetch(`${process.env.REACT_APP_API_URL}/api/macros_today?user_id=${userId}`)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         setMacroCarbs(data.avg_carbs);
         setMacroProteins(data.avg_proteins);
         setMacroFats(data.avg_fats);
       })
-      .catch(error => console.error("Error fetching macros:", error));
+      .catch((error) => console.error("Error fetching macros:", error));
 
-    // Fetch streak from API
     fetch(`${process.env.REACT_APP_API_URL}/api/streak?user_id=${userId}`)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         setStreak(data.streak);
       })
-      .catch(error => console.error("Error fetching streak:", error));
+      .catch((error) => console.error("Error fetching streak:", error));
   }, []);
 
-  // Helper for ordinal suffix
   const getOrdinal = (n) => {
     if (n > 3 && n < 21) return "th";
     switch (n % 10) {
@@ -546,21 +522,14 @@ const Dashboard = () => {
     }
   };
 
-  // Ensure planFill is a number.
   const safePlanFill = Number(planFill) || 0;
-  // Calculate progress percentage (cap at 100%)
-  const progress = Math.min((safePlanFill / planGoal) * 100, 100);
-  
-  // Set circle circumference (adjust as needed) and compute dash offset
+  const progress = planGoal > 0 ? Math.min((safePlanFill / planGoal) * 100, 100) : 0;
   const circumference = 283;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   return (
     <div className="dashboard-container">
-      {/* Main Date Title */}
       <div className="dashboard-date-title">{dateString}</div>
-      
-      {/* Profile Icon */}
       <img
         className="profile-icon"
         src="/profile.png"
@@ -568,8 +537,6 @@ const Dashboard = () => {
         onClick={() => navigate("/Profile")}
         style={{ cursor: "pointer" }}
       />
-
-      {/* Dynamic Day Circles */}
       <div className="week-days-container">
         {weekDays.map((day, index) => (
           <div key={index} className={`day-circle ${day.isToday ? "active" : ""}`}>
@@ -578,13 +545,9 @@ const Dashboard = () => {
           </div>
         ))}
       </div>
-
-      {/* Dynamic Calorie Ring */}
       <div className="calorie-ring">
         <svg width="175" height="175" viewBox="0 0 100 100">
-          {/* Background Circle */}
           <circle cx="50" cy="50" r="45" stroke="#ddd" strokeWidth="8" fill="none" />
-          {/* Progress Circle with 2s transition */}
           <circle
             cx="50"
             cy="50"
@@ -598,34 +561,25 @@ const Dashboard = () => {
             transform="rotate(-90 50 50)"
             style={{ transition: "stroke-dashoffset 4s ease" }}
           />
-          {/* Calorie Text */}
           <text x="50" y="50" textAnchor="middle" dominantBaseline="middle" fontSize="12">
             {safePlanFill} / {planGoal} kcal
           </text>
         </svg>
       </div>
-
-      {/* Macro Labels */}
       <div className="macros-label-carbs">Carbs</div>
       <div className="macros-label-protein">Protein</div>
       <div className="macros-label-fat">Fat</div>
-      
-      {/* Macro Circles and Text */}
       <div className="macro-circle-1"></div>
       <div className="macro-text-1">{macroCarbs}%</div>
       <div className="macro-circle-2"></div>
       <div className="macro-text-2">{macroProteins}%</div>
       <div className="macro-circle-3"></div>
       <div className="macro-text-3">{macroFats}%</div>
-      
-      {/* Calorie Tracking (Streak) */}
       <div className="calorie-streak-box"></div>
       <div className="calorie-tracking-label">Calorie tracking</div>
       <div className="calorie-streak-text">Streak</div>
       <div className="streak-number">{streak}</div>
       <div className="streak-days">Days</div>
-
-      {/* Bottom Navigation */}
       <div className="nav-container">
         <div className="nav-bar">
           <div className="nav-item" onClick={() => navigate("/dashboard")}>
@@ -654,9 +608,7 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear stored user data and token from localStorage
     localStorage.clear();
-    // Navigate to the login page
     navigate("/login");
   };
 
@@ -722,12 +674,11 @@ const Record = () => {
     alert("Image is being processed! Please wait.");
 
     try {
-      // Include userId from localStorage
       const userId = localStorage.getItem("userId");
       const response = await fetch(`${process.env.REACT_APP_API_URL}/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: capturedImage, UserId: userId }),
+        body: JSON.stringify({ image: capturedImage, user_id: userId }), // Match backend key
       });
       const data = await response.json();
       if (response.ok) {
@@ -793,7 +744,6 @@ const Record = () => {
           <div className="nav-label">Plan</div>
         </div>
       </div>
-
       {showReviewBox && (
         <div className="review-overlay fade-in">
           <h2 className="review-title">Review captured items</h2>
@@ -813,11 +763,11 @@ const Record = () => {
             <p className="review-label-sug">Sugar</p>
             <p className="review-value-sug">{nutrition?.sugar || "N/A"}%</p>
             <p className="review-label-vit">Vitamins</p>
-            <p className="review-value-vit">{nutrition?.vitamins || "N/A"} </p>
+            <p className="review-value-vit">{nutrition?.vitamins || "N/A"}</p>
             <p className="review-label-min">Minerals</p>
-            <p className="review-value-min">{nutrition?.minerals || "N/A"} </p>
+            <p className="review-value-min">{nutrition?.minerals || "N/A"}</p>
             <p className="review-label-qty">Quantity</p>
-            <p className="review-value-qty">{nutrition?.quantity || "N/A"} </p>
+            <p className="review-value-qty">{nutrition?.quantity || "N/A"}</p>
           </div>
         </div>
       )}
@@ -830,15 +780,12 @@ const Recipe = () => {
   const [recipes, setRecipes] = useState([]);
   const [mainRecipe, setMainRecipe] = useState(null);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
-
-  const plan_id = 1;
+  const planId = localStorage.getItem("planId") || 1; // Dynamic planId
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/api/recommended?plan_id=${plan_id}`) // Changed from http://localhost:5000
+    fetch(`${process.env.REACT_APP_API_URL}/api/recommended?plan_id=${planId}`)
       .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         return response.json();
       })
       .then((data) => {
@@ -849,45 +796,39 @@ const Recipe = () => {
         }
       })
       .catch((error) => console.error("Error fetching recipes:", error));
-  }, [plan_id]);
+  }, [planId]);
 
   const closeOverlay = () => setSelectedRecipe(null);
 
   return (
     <div className="recipe-screen">
       <p className="recommended-recipes">Recommended Recipes</p>
-      
-      {/* Dynamic Recipe Main Section */}
       {mainRecipe && (
-        <div 
-          className="recipe-main" 
-          style={{ backgroundImage: `url(${process.env.REACT_APP_API_URL}/static/images/${mainRecipe.image})` }} // Changed from http://localhost:5000
+        <div
+          className="recipe-main"
+          style={{ backgroundImage: `url(${process.env.REACT_APP_API_URL}/static/images/${mainRecipe.image})` }}
           onClick={() => setSelectedRecipe(mainRecipe)}
         >
           <div className="recipe-title">{mainRecipe.recipe_name}</div>
         </div>
       )}
-
-      {/* Dynamic Recipe Grid */}
       <div className="recipe-grid">
         {recipes.map((recipe) => (
           <div
             key={recipe.recommended_id}
             className="recipe-item"
             onClick={() => setSelectedRecipe(recipe)}
-            style={{ backgroundImage: `url(${process.env.REACT_APP_API_URL}/static/images/${recipe.image})` }} // Changed from http://localhost:5000
+            style={{ backgroundImage: `url(${process.env.REACT_APP_API_URL}/static/images/${recipe.image})` }}
           >
             <div className="recipe-name">{recipe.recipe_name}</div>
           </div>
         ))}
       </div>
-      
-      {/* Overlay for recipe details */}
       {selectedRecipe && (
         <div className="overlay" onClick={closeOverlay}>
           <div className="overlay-content" onClick={(e) => e.stopPropagation()}>
             <img
-              src={`${process.env.REACT_APP_API_URL}/static/images/${selectedRecipe.image}`} // Changed from http://localhost:5000
+              src={`${process.env.REACT_APP_API_URL}/static/images/${selectedRecipe.image}`}
               alt={selectedRecipe.recipe_name}
               className="overlay-image"
             />
@@ -899,7 +840,6 @@ const Recipe = () => {
           </div>
         </div>
       )}
-      
       <div className="nav-container">
         <div className="nav-bar">
           <div className="nav-item" onClick={() => navigate("/dashboard")}>
@@ -926,157 +866,125 @@ const Recipe = () => {
 
 const Plan = () => {
   const navigate = useNavigate();
-
-  // State for day labels and numbers
   const [yesterdayName, setYesterdayName] = useState("");
   const [todayName, setTodayName] = useState("");
   const [tomorrowName, setTomorrowName] = useState("");
   const [yesterdayDate, setYesterdayDate] = useState(0);
   const [todayDate, setTodayDate] = useState(0);
   const [tomorrowDate, setTomorrowDate] = useState(0);
-  const [selectedDay, setSelectedDay] = useState("today"); // "yesterday", "today", or "tomorrow"
-
-  // State to store plan meal items from plan_display
+  const [selectedDay, setSelectedDay] = useState("today");
   const [planItems, setPlanItems] = useState({});
-  // Cache for each day's plan items so we don't re-fetch for already selected day
   const [planCache, setPlanCache] = useState({});
-
-  // Calorie progress values
   const [calorieFill, setCalorieFill] = useState(0);
   const [calorieGoal, setCalorieGoal] = useState(0);
-
-  // Get planId dynamically (for example from localStorage)
   const planId = localStorage.getItem("planId") || 1;
   const userId = localStorage.getItem("userId");
-  // Setup day names and numeric dates once on mount
+
   useEffect(() => {
     const now = new Date();
     const day = now.getDate();
     setTodayDate(day);
     setYesterdayDate(day - 1);
     setTomorrowDate(day + 1);
-    
-    const dayIndex = now.getDay(); // 0=Sun, 1=Mon,...,6=Sat
+    const dayIndex = now.getDay();
     const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     setTodayName(dayNames[dayIndex]);
     setYesterdayName(dayNames[(dayIndex + 6) % 7]);
     setTomorrowName(dayNames[(dayIndex + 1) % 7]);
   }, []);
 
-  // Memoized function to fetch plan items for a given day
-  const fetchPlanItems = useCallback((day) => {
+  const fetchPlanItems = useCallback(() => {
     fetch(`${process.env.REACT_APP_API_URL}/api/plan_display?plan_id=${planId}`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         return response.json();
       })
-      .then(data => {
-        console.log(`Plan items for ${day}:`, data);
-        // Update cache: use a new object so React sees the change
-        setPlanCache(prevCache => ({ ...prevCache, [day]: data }));
+      .then((data) => {
+        console.log(`Plan items for ${selectedDay}:`, data);
+        setPlanCache((prevCache) => ({ ...prevCache, [selectedDay]: data }));
         setPlanItems(data);
-        // Calculate goal as the sum of the calories of all available meals
-        const goal = 
+        const goal =
           (data.breakfast ? data.breakfast.calorie : 0) +
           (data.lunch ? data.lunch.calorie : 0) +
           (data.dinner ? data.dinner.calorie : 0);
         setCalorieGoal(goal);
         localStorage.setItem("planGoal", goal);
       })
-      .catch(error => console.error("Error fetching plan display items:", error));
-  }, [planId]); // Dependencies: planId (since the API call depends on it)
+      .catch((error) => console.error("Error fetching plan display items:", error));
+  }, [planId, selectedDay]);
 
-  // useEffect to fetch plan items when selectedDay changes,
-  // but only fetch if we don't have them in cache already.
   useEffect(() => {
     if (!planId) return;
-
     if (planCache[selectedDay]) {
-      // If the plan items have been cached, use them.
       setPlanItems(planCache[selectedDay]);
       const data = planCache[selectedDay];
-      const goal = 
-          (data.breakfast ? data.breakfast.calorie : 0) +
-          (data.lunch ? data.lunch.calorie : 0) +
-          (data.dinner ? data.dinner.calorie : 0);
+      const goal =
+        (data.breakfast ? data.breakfast.calorie : 0) +
+        (data.lunch ? data.lunch.calorie : 0) +
+        (data.dinner ? data.dinner.calorie : 0);
       setCalorieGoal(goal);
       localStorage.setItem("planGoal", goal);
     } else {
-      // Otherwise, fetch the plan items and cache them.
-      fetchPlanItems(selectedDay);
+      fetchPlanItems();
     }
-  }, [planId, selectedDay, planCache, fetchPlanItems]); // fetchPlanItems is now memoized
+  }, [planId, selectedDay, planCache, fetchPlanItems]);
 
-  // Fetch today's filled calories (only for "today" view)
   useEffect(() => {
     if (selectedDay === "today") {
       fetch(`${process.env.REACT_APP_API_URL}/api/calories_today?user_id=${userId}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
+        .then((response) => {
+          if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
           return response.json();
         })
-        .then(data => {
+        .then((data) => {
           console.log("Today's fill data:", data);
           setCalorieFill(data.fill);
           localStorage.setItem("planFill", data.fill);
         })
-        .catch(error => console.error("Error fetching today's calories:", error));
+        .catch((error) => console.error("Error fetching today's calories:", error));
     } else {
-      // For yesterday or tomorrow, fill should be zero.
       setCalorieFill(0);
       localStorage.setItem("planFill", 0);
     }
-  }, [selectedDay]);
+  }, [selectedDay, userId]);
 
-  // Handler for day selection
   const handleDayClick = (day) => {
     if (day !== selectedDay) {
       setSelectedDay(day);
-      // When the day changes, if it's not in the cache, the effect will fetch it.
     }
   };
 
-  // Calculate fill percentage (avoid division by zero)
   const fillPercentage = calorieGoal > 0 ? Math.min((calorieFill / calorieGoal) * 100, 100) : 0;
 
   return (
     <div className="plan-screen">
-      {/* Title */}
       <h1 className="plan-title">Plan</h1>
-      
-      {/* Day Selection */}
       <div className="plan-day-container">
-        <div 
-          className={`plan-day ${selectedDay === 'yesterday' ? 'selected' : ''}`}
-          onClick={() => handleDayClick('yesterday')}
+        <div
+          className={`plan-day ${selectedDay === "yesterday" ? "selected" : ""}`}
+          onClick={() => handleDayClick("yesterday")}
         >
           <p className="plan-day-label">{yesterdayName}</p>
           <p className="plan-day-number">{yesterdayDate}</p>
         </div>
-        <div 
-          className={`plan-day ${selectedDay === 'today' ? 'selected' : ''}`}
-          onClick={() => handleDayClick('today')}
+        <div
+          className={`plan-day ${selectedDay === "today" ? "selected" : ""}`}
+          onClick={() => handleDayClick("today")}
         >
           <p className="plan-day-label">{todayName}</p>
           <p className="plan-day-number">{todayDate}</p>
         </div>
-        <div 
-          className={`plan-day ${selectedDay === 'tomorrow' ? 'selected' : ''}`}
-          onClick={() => handleDayClick('tomorrow')}
+        <div
+          className={`plan-day ${selectedDay === "tomorrow" ? "selected" : ""}`}
+          onClick={() => handleDayClick("tomorrow")}
         >
           <p className="plan-day-label">{tomorrowName}</p>
           <p className="plan-day-number">{tomorrowDate}</p>
         </div>
       </div>
-
-      {/* Calorie Progress Section */}
       <div className="plan-calorie-box">
         <div className="plan-calorie-bg"></div>
-        <div 
+        <div
           className="plan-calorie-fill"
           style={{ width: `${fillPercentage}%` }}
         ></div>
@@ -1084,10 +992,7 @@ const Plan = () => {
           {calorieFill} of {calorieGoal} Calories
         </p>
       </div>
-
-      {/* Meals Section */}
       <div className="plan-meals">
-        {/* Breakfast */}
         <h2 className="plan-breakfast-title">Breakfast</h2>
         {planItems.breakfast ? (
           <>
@@ -1103,8 +1008,6 @@ const Plan = () => {
         ) : (
           <p className="plan-no-item">No breakfast item available</p>
         )}
-
-        {/* Lunch */}
         <h2 className="plan-lunch-title">Lunch</h2>
         {planItems.lunch ? (
           <>
@@ -1120,8 +1023,6 @@ const Plan = () => {
         ) : (
           <p className="plan-no-item">No lunch item available</p>
         )}
-
-        {/* Dinner */}
         <h2 className="plan-dinner-title">Dinner</h2>
         {planItems.dinner ? (
           <>
@@ -1138,8 +1039,6 @@ const Plan = () => {
           <p className="plan-no-item">No dinner item available</p>
         )}
       </div>
-
-      {/* Bottom Navigation */}
       <div className="nav-container">
         <div className="nav-bar">
           <div className="nav-item" onClick={() => navigate("/dashboard")}>
@@ -1168,22 +1067,24 @@ const App = () => {
   return (
     <div className="app-wrapper">
       <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup-email" element={<SignupEmail />} />
-          <Route path="/signup-name" element={<SignupName />} />
-          <Route path="/signup-password" element={<SignupPassword />} />
-          <Route path="/signup-gender" element={<SignupGender />} />
-          <Route path="/signup-age" element={<SignupAge />} />
-          <Route path="/signup-measurements" element={<SignupMeasurements />} />
-          <Route path="/signup-goal" element={<SignupGoal />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/Profile" element={<Profile />} />
-          <Route path="/recipe" element={<Recipe />} />
-          <Route path="/record" element={<Record />} />
-          <Route path="/plan" element={<Plan />} />
-        </Routes>
+        <SignupContextProvider>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup-email" element={<SignupEmail />} />
+            <Route path="/signup-name" element={<SignupName />} />
+            <Route path="/signup-password" element={<SignupPassword />} />
+            <Route path="/signup-gender" element={<SignupGender />} />
+            <Route path="/signup-age" element={<SignupAge />} />
+            <Route path="/signup-measurements" element={<SignupMeasurements />} />
+            <Route path="/signup-goal" element={<SignupGoal />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/Profile" element={<Profile />} />
+            <Route path="/recipe" element={<Recipe />} />
+            <Route path="/record" element={<Record />} />
+            <Route path="/plan" element={<Plan />} />
+          </Routes>
+        </SignupContextProvider>
       </Router>
     </div>
   );

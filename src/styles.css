@@ -9,11 +9,20 @@
 
 @media (max-width: 360px) {
   .app-wrapper {
-    transform: scale(calc(100vw / 360));
-    transform-origin: top center;
+    width: 100%;
+    transform: scale(1);
   }
 }
 
+@media (max-width: 320px) {
+  .screen-container, .dashboard-container, .recipe-screen, .plan-screen, .record-screen {
+    font-size: 14px;
+  }
+  .btn, .next-btn, .goal-next-btn, .gender-next-btn {
+    width: 280px;
+    left: 20px;
+  }
+}
 
 /* Common Screen Container */
 .screen-container {
@@ -2105,6 +2114,11 @@
   border-radius: 20px;
   cursor: pointer;
   margin-top: 10px;
+}
+
+.login-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
 }
 
 .login-button:hover {

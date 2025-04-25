@@ -12,68 +12,74 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token, jwt_required, JWTManager
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 from tensorflow.keras.preprocessing import image
+import logging
 
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
 
 app = Flask(__name__, static_folder="static")
-CORS(app, resources={r"/*": {"origins": os.getenv("ALLOWED_ORIGIN", "*")}})  # Allows requests from a different origin (e.g., your React app)
+CORS(app, resources={r"/*": {"origins": os.getenv("ALLOWED_ORIGIN", "*")}})
 bcrypt = Bcrypt(app)
 
 # JWT Configuration
 app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET_KEY")
 jwt = JWTManager(app)
 
-# Configure PostgreSQL connection using environment variables
-conn = psycopg2.connect(os.getenv("DATABASE_URL"))
-conn.autocommit = True  # For simplicity; consider using transactions in production
+# Database connection function
+def get_db_connection():
+    return psycopg2.connect(os.getenv("DATABASE_URL"))
 
 # Load CNN Model
 MODEL_PATH = "food_model_CNN.keras"
 model = tf.keras.models.load_model(MODEL_PATH)
 
-# Load class names from dataset directory
+# Load class names
 class_names = ["Biryani", "Dosa", "Idli", "Palak Paneer", "Shira", "Chapati", "Gulab Jamun", "Jalebi", "Poha", "Rice"]
 
 def preprocess_image(image_data):
     """Preprocess image for model prediction."""
     image = Image.open(io.BytesIO(image_data))
     image = image.resize((128, 128))
-    image_array = np.array(image) / 255.0  # Normalize
-    image_array = np.expand_dims(image_array, axis=0)  # Add batch dimension
+    image_array = np.array(image) / 255.0
+    image_array = np.expand_dims(image_array, axis=0)
     return image_array
-
 
 @app.route('/predict', methods=['POST'])
 def predict():
     """Receives an image, predicts the food item, and fetches nutritional data."""
     try:
-        data = request.json.get("image")  # Get base64 image data
-        if not data:
+        data = request.get_json()
+        if not data or "image" not in data:
             return jsonify({"error": "No image data provided"}), 400
 
-        # Decode base64 image
-        image_data = base64.b64decode(data.split(",")[1])
-        processed_image = preprocess_image(image_data)
-        user_id = data.get("UserId")
+        image_data = base64.b64decode(data["image"].split(",")[1])
+        user_id = data.get("user_id")  # Match frontend key
         if not user_id:
-            return jsonify({"error": "UserId is required"}), 400
-        # Make prediction
+            return jsonify({"error": "user_id is required"}), 400
+
+        processed_image = preprocess_image(image_data)
         predictions = model.predict(processed_image)
         predicted_class_index = np.argmax(predictions)
         predicted_food = class_names[predicted_class_index]
 
-        # Store food item in database
+        conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO food_records (food_item,user_id) VALUES (%s) RETURNING id;", (predicted_food,user_id))
+        cursor.execute(
+            "INSERT INTO food_records (food_item, user_id) VALUES (%s, %s) RETURNING id;",
+            (predicted_food, user_id)
+        )
         record_id = cursor.fetchone()[0]
+        conn.commit()
 
-        # Retrieve nutritional values
-        cursor.execute("SELECT calories, proteins, carbohydrates, fats, sugar, vitamins, minerals, quantity FROM nutrition WHERE food_item = %s", (predicted_food,))
+        cursor.execute(
+            "SELECT calories, proteins, carbohydrates, fats, sugar, vitamins, minerals, quantity FROM nutrition WHERE food_item = %s",
+            (predicted_food,)
+        )
         nutrition_data = cursor.fetchone()
         cursor.close()
+        conn.close()
 
         if nutrition_data:
             return jsonify({
@@ -100,32 +106,22 @@ def predict():
 def signup():
     data = request.get_json()
     try:
+        required_fields = ['email', 'name', 'password', 'gender', 'age', 'height_ft', 'height_inch', 'weight', 'goal']
+        for field in required_fields:
+            if field not in data or not str(data[field]).strip():
+                return jsonify({"error": f"{field} is required"}), 400
+
         email = data['email']
         name = data['name']
-        password = bcrypt.generate_password_hash(data['password']).decode('utf-8')  # Secure the password!
+        password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
         gender = data['gender']
-        
-        # For numeric fields, convert to string for validation then convert to the proper type.
-        if data.get('age') is None or str(data.get('age')).strip() == "":
-            return jsonify({"error": "Age is required"}), 400
         age = int(data['age'])
-        
-        if data.get('height_ft') is None or str(data.get('height_ft')).strip() == "":
-            return jsonify({"error": "Height (feet) is required"}), 400
         height_ft = int(data['height_ft'])
-        
-        if data.get('height_inch') is None or str(data.get('height_inch')).strip() == "":
-            return jsonify({"error": "Height (inches) is required"}), 400
         height_inch = int(data['height_inch'])
-        
-        if data.get('weight') is None or str(data.get('weight')).strip() == "":
-            return jsonify({"error": "Weight is required"}), 400
         weight = float(data['weight'])
-        
-        if data.get('goal') is None or str(data.get('goal')).strip() == "":
-            return jsonify({"error": "Goal is required"}), 400
         goal = int(data['goal'])
-        
+
+        conn = get_db_connection()
         cursor = conn.cursor()
         insert_query = """
             INSERT INTO User1 (Email, Name, PasswordHash, Gender, Age, HeightFeet, HeightInches, Weight, plan_id)
@@ -134,12 +130,18 @@ def signup():
         """
         cursor.execute(insert_query, (email, name, password, gender, age, height_ft, height_inch, weight, goal))
         user_id = cursor.fetchone()[0]
+        conn.commit()
         cursor.close()
-        
+        conn.close()
+
         return jsonify({"message": "Signup successful", "user_id": user_id}), 201
     except Exception as e:
         print("Error during signup:", e)
         return jsonify({"error": "Signup failed"}), 500
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -148,42 +150,57 @@ def login():
     password = data.get("password")
 
     if not email or not password:
-        return jsonify({"message": "Email and password are required"}), 400
+        logger.warning("Login attempt with missing email or password")
+        return jsonify({"message": "Email and password are required", "success": False}), 400
 
     try:
+        conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT UserID, PasswordHash, plan_id FROM User1 WHERE Email = %s", (email,))
+        cursor.execute(
+            "SELECT UserID, PasswordHash, plan_id FROM User1 WHERE LOWER(Email) = LOWER(%s)",
+            (email,)
+        )
         user = cursor.fetchone()
         cursor.close()
+        conn.close()
 
-        if user:
-            user_id, hashed_password, plan_id = user
-            if bcrypt.check_password_hash(hashed_password, password):
-                access_token = create_access_token(identity=user_id)
-                return jsonify({
-                    "message": "Login successful", 
-                    "token": access_token,
-                    "user_id": user_id,
-                    "plan_id": plan_id
-                    }), 200
+        if not user:
+            logger.info(f"No user found for email: {email}")
+            return jsonify({"message": "Invalid email or password", "success": False}), 401
 
-        return jsonify({"message": "Invalid credentials"}), 401
+        userid, password_hash, plan_id = user
+        logger.info(f"User found: UserID={userid}, PlanID={plan_id}")
+
+        if not bcrypt.check_password_hash(password_hash, password):
+            logger.info(f"Password mismatch for UserID: {userid}")
+            return jsonify({"message": "Invalid email or password", "success": False}), 401
+
+        access_token = create_access_token(identity=userid)
+        response = {
+            "message": "Login successful",
+            "success": True,
+            "token": access_token,
+            "user_id": userid,
+            "plan_id": plan_id
+        }
+        logger.info(f"Login successful for UserID: {userid}, Response: {response}")
+        return jsonify(response), 200
     except Exception as e:
-        print("Error during login:", e)
-        return jsonify({"error": "Login failed"}), 500
+        logger.error(f"Error during login: {str(e)}")
+        return jsonify({"message": "Login failed due to server error", "success": False}), 500
 
 @app.route('/dashboard', methods=['GET'])
 @jwt_required()
 def dashboard():
     return jsonify({"message": "Welcome to the dashboard!"}), 200
 
-# New endpoint to fetch recommended recipes
 @app.route('/api/recommended', methods=['GET'])
 def get_recommended_recipes():
     plan_id = request.args.get("plan_id")
     if not plan_id:
         return jsonify({"error": "plan_id parameter is required"}), 400
     try:
+        conn = get_db_connection()
         cursor = conn.cursor()
         query = """
             SELECT recommended_id, plan_id, recipe_name, ingredients, recipe_steps, image, calorie 
@@ -195,10 +212,10 @@ def get_recommended_recipes():
         cursor.execute(query, (plan_id,))
         recipes = cursor.fetchall()
         cursor.close()
+        conn.close()
 
-        recommended_recipes = []
-        for row in recipes:
-            recommended_recipes.append({
+        recommended_recipes = [
+            {
                 "recommended_id": row[0],
                 "plan_id": row[1],
                 "recipe_name": row[2],
@@ -206,18 +223,21 @@ def get_recommended_recipes():
                 "recipe_steps": row[4],
                 "image": row[5],
                 "calorie": row[6]
-            })
+            }
+            for row in recipes
+        ]
         return jsonify(recommended_recipes), 200
     except Exception as e:
         print("Error fetching recommended recipes:", e)
         return jsonify({"error": "Failed to fetch recipes"}), 500
-    
+
 @app.route('/api/plan_display', methods=['GET'])
 def get_plan_display_items():
     plan_id = request.args.get("plan_id", type=int)
     if not plan_id:
         return jsonify({"error": "plan_id parameter is required"}), 400
 
+    conn = get_db_connection()
     cursor = conn.cursor()
     items = {}
     for meal in ['breakfast', 'lunch', 'dinner']:
@@ -240,45 +260,49 @@ def get_plan_display_items():
         else:
             items[meal] = None
     cursor.close()
+    conn.close()
     return jsonify(items), 200
 
 @app.route('/api/calories_today', methods=['GET'])
 def get_calories_today():
     user_id = request.args.get("user_id", type=int)
     if not user_id:
-        return jsonify({"error":"user_id parameter is required"}), 400
+        return jsonify({"error": "user_id parameter is required"}), 400
     try:
+        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("""
             SELECT COALESCE(SUM(n.calories), 0)
             FROM food_records fr
             JOIN nutrition n ON fr.food_item = n.food_item
-            WHERE DATE(created_at) = CURRENT_DATE AND fr.user_id=%s;
+            WHERE DATE(created_at) = CURRENT_DATE AND fr.user_id = %s;
         """, (user_id,))
         result = cursor.fetchone()
         cursor.close()
+        conn.close()
         fill = result[0] if result and result[0] is not None else 0
         return jsonify({"fill": fill}), 200
     except Exception as e:
         print("Error fetching today's calories:", e)
         return jsonify({"error": "Error calculating fill"}), 500
 
-# New endpoint to fetch today's average macros from nutrition
 @app.route('/api/macros_today', methods=['GET'])
 def get_macros_today():
     user_id = request.args.get("user_id", type=int)
     if not user_id:
-        return jsonify({"error":"user_id parameter is required"}), 400
+        return jsonify({"error": "user_id parameter is required"}), 400
     try:
+        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("""
             SELECT AVG(n.carbohydrates), AVG(n.proteins), AVG(n.fats)
             FROM food_records fr
             JOIN nutrition n ON fr.food_item = n.food_item
-            WHERE DATE(created_at) = CURRENT_DATE AND fr.UserId=%s;
+            WHERE DATE(created_at) = CURRENT_DATE AND fr.user_id = %s;
         """, (user_id,))
         result = cursor.fetchone()
         cursor.close()
+        conn.close()
         avg_carbs = round(result[0]) if result and result[0] is not None else 0
         avg_proteins = round(result[1]) if result and result[1] is not None else 0
         avg_fats = round(result[2]) if result and result[2] is not None else 0
@@ -291,21 +315,22 @@ def get_macros_today():
         print("Error fetching today's macros:", e)
         return jsonify({"error": "Error calculating macros"}), 500
 
-# New endpoint to calculate the streak (number of distinct days with records)
 @app.route('/api/streak', methods=['GET'])
 def get_streak():
     user_id = request.args.get("user_id", type=int)
     if not user_id:
-        return jsonify({"error":"user_id parameter is required"}), 400
+        return jsonify({"error": "user_id parameter is required"}), 400
     try:
+        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("""
             SELECT COUNT(DISTINCT DATE(created_at))
             FROM food_records
-            WHERE UserId=%s;
+            WHERE user_id = %s;
         """, (user_id,))
         result = cursor.fetchone()
         cursor.close()
+        conn.close()
         streak = result[0] if result and result[0] is not None else 0
         return jsonify({"streak": streak}), 200
     except Exception as e:
@@ -315,7 +340,3 @@ def get_streak():
 @app.route('/static/images/<path:filename>')
 def serve_image(filename):
     return send_from_directory("static/images", filename)
-
-# Run Flask App
-#if __name__ == '__main__':
-#    app.run(debug=True)
