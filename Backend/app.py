@@ -57,7 +57,9 @@ def predict():
         # Decode base64 image
         image_data = base64.b64decode(data.split(",")[1])
         processed_image = preprocess_image(image_data)
-
+        user_id = data.get("UserId")
+        if not user_id:
+            return jsonify({"error": "UserId is required"}), 400
         # Make prediction
         predictions = model.predict(processed_image)
         predicted_class_index = np.argmax(predictions)
@@ -65,7 +67,7 @@ def predict():
 
         # Store food item in database
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO food_records (food_item) VALUES (%s) RETURNING id;", (predicted_food,))
+        cursor.execute("INSERT INTO food_records (food_item,user_id) VALUES (%s) RETURNING id;", (predicted_food,user_id))
         record_id = cursor.fetchone()[0]
 
         # Retrieve nutritional values
@@ -150,15 +152,20 @@ def login():
 
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT UserID, PasswordHash FROM User1 WHERE Email = %s", (email,))
+        cursor.execute("SELECT UserID, PasswordHash, plan_id FROM User1 WHERE Email = %s", (email,))
         user = cursor.fetchone()
         cursor.close()
 
         if user:
-            user_id, hashed_password = user
+            user_id, hashed_password, plan_id = user
             if bcrypt.check_password_hash(hashed_password, password):
                 access_token = create_access_token(identity=user_id)
-                return jsonify({"message": "Login successful", "token": access_token}), 200
+                return jsonify({
+                    "message": "Login successful", 
+                    "token": access_token,
+                    "user_id": user_id,
+                    "plan_id": plan_id
+                    }), 200
 
         return jsonify({"message": "Invalid credentials"}), 401
     except Exception as e:
@@ -237,15 +244,17 @@ def get_plan_display_items():
 
 @app.route('/api/calories_today', methods=['GET'])
 def get_calories_today():
+    user_id = request.args.get("user_id", type=int)
+    if not user_id:
+        return jsonify({"error":"user_id parameter is required"}), 400
     try:
         cursor = conn.cursor()
-        query = """
+        cursor.execute("""
             SELECT COALESCE(SUM(n.calories), 0)
             FROM food_records fr
             JOIN nutrition n ON fr.food_item = n.food_item
-            WHERE DATE(created_at) = CURRENT_DATE;
-        """
-        cursor.execute(query)
+            WHERE DATE(created_at) = CURRENT_DATE AND fr.user_id=%s;
+        """, (user_id,))
         result = cursor.fetchone()
         cursor.close()
         fill = result[0] if result and result[0] is not None else 0
@@ -257,15 +266,17 @@ def get_calories_today():
 # New endpoint to fetch today's average macros from nutrition
 @app.route('/api/macros_today', methods=['GET'])
 def get_macros_today():
+    user_id = request.args.get("user_id", type=int)
+    if not user_id:
+        return jsonify({"error":"user_id parameter is required"}), 400
     try:
         cursor = conn.cursor()
-        query = """
+        cursor.execute("""
             SELECT AVG(n.carbohydrates), AVG(n.proteins), AVG(n.fats)
             FROM food_records fr
             JOIN nutrition n ON fr.food_item = n.food_item
-            WHERE DATE(created_at) = CURRENT_DATE;
-        """
-        cursor.execute(query)
+            WHERE DATE(created_at) = CURRENT_DATE AND fr.UserId=%s;
+        """, (user_id,))
         result = cursor.fetchone()
         cursor.close()
         avg_carbs = round(result[0]) if result and result[0] is not None else 0
@@ -283,10 +294,16 @@ def get_macros_today():
 # New endpoint to calculate the streak (number of distinct days with records)
 @app.route('/api/streak', methods=['GET'])
 def get_streak():
+    user_id = request.args.get("user_id", type=int)
+    if not user_id:
+        return jsonify({"error":"user_id parameter is required"}), 400
     try:
         cursor = conn.cursor()
-        query = "SELECT COUNT(DISTINCT DATE(created_at)) FROM food_records;"
-        cursor.execute(query)
+        cursor.execute("""
+            SELECT COUNT(DISTINCT DATE(created_at))
+            FROM food_records
+            WHERE UserId=%s;
+        """, (user_id,))
         result = cursor.fetchone()
         cursor.close()
         streak = result[0] if result and result[0] is not None else 0

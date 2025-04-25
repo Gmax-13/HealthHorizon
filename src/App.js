@@ -33,7 +33,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    setError(""); // Clear previous errors
+    setError("");
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/login`, {
@@ -45,8 +45,10 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("token", data.token); // Store JWT token
-        navigate("/dashboard"); // Redirect to dashboard
+        // Store the userId and planId instead of the JWT
+        localStorage.setItem("userId", data.user_id);
+        localStorage.setItem("planId", data.plan_id);
+        navigate("/dashboard");
       } else {
         setError(data.message || "Login failed. Please try again.");
       }
@@ -57,6 +59,9 @@ const Login = () => {
 
   return (
     <div className="login-container">
+      <div className="back-arrow" onClick={() => navigate("/signup-gender")}>
+        <div className="vector"></div>
+      </div>
       <h2 className="login-title">Log in</h2>
 
       {error && <p className="error-message">{error}</p>}
@@ -492,13 +497,13 @@ const Dashboard = () => {
     };
 
     setWeekDays(generateWeekDays());
-
+    const userId = localStorage.getItem("userId");
     // Load initial planFill from localStorage (if any)
     const storedFill = parseInt(localStorage.getItem("planFill"), 10) || 0;
     setPlanFill(storedFill);
 
     // Fetch today's total calories from API
-    fetch(`${process.env.REACT_APP_API_URL}/api/calories_today`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/calories_today?user_id=${userId}`)
         .then(response => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -512,7 +517,7 @@ const Dashboard = () => {
         .catch(error => console.error("Error fetching today's calories:", error));
 
     // Fetch today's macro averages from API
-    fetch(`${process.env.REACT_APP_API_URL}/api/macros_today`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/macros_today?user_id=${userId}`)
       .then(response => response.json())
       .then(data => {
         setMacroCarbs(data.avg_carbs);
@@ -522,7 +527,7 @@ const Dashboard = () => {
       .catch(error => console.error("Error fetching macros:", error));
 
     // Fetch streak from API
-    fetch(`${process.env.REACT_APP_API_URL}/api/streak`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/streak?user_id=${userId}`)
       .then(response => response.json())
       .then(data => {
         setStreak(data.streak);
@@ -714,18 +719,17 @@ const Record = () => {
       alert("No image captured!");
       return;
     }
-
     alert("Image is being processed! Please wait.");
 
     try {
+      // Include userId from localStorage
+      const userId = localStorage.getItem("userId");
       const response = await fetch(`${process.env.REACT_APP_API_URL}/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: capturedImage }),
+        body: JSON.stringify({ image: capturedImage, UserId: userId }),
       });
-
       const data = await response.json();
-
       if (response.ok) {
         setShowReviewBox(true);
         setPredictedFood(data.food_item);
@@ -734,7 +738,6 @@ const Record = () => {
         alert(data.error || "Prediction failed");
       }
     } catch (error) {
-      console.error("Error processing image:", error);
       alert("Failed to process the image.");
     }
   };
@@ -944,7 +947,7 @@ const Plan = () => {
 
   // Get planId dynamically (for example from localStorage)
   const planId = localStorage.getItem("planId") || 1;
-
+  const userId = localStorage.getItem("userId");
   // Setup day names and numeric dates once on mount
   useEffect(() => {
     const now = new Date();
@@ -1009,7 +1012,7 @@ const Plan = () => {
   // Fetch today's filled calories (only for "today" view)
   useEffect(() => {
     if (selectedDay === "today") {
-      fetch(`${process.env.REACT_APP_API_URL}/api/calories_today`)
+      fetch(`${process.env.REACT_APP_API_URL}/api/calories_today?user_id=${userId}`)
         .then(response => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
