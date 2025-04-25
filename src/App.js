@@ -81,8 +81,8 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <div className="back-arrow" onClick={() => navigate("/signup-gender")}>
-        <div className="vector">←</div>
+      <div className="back-arrow" onClick={() => navigate("/")}>
+        <div className="vector"></div>
       </div>
       <h2 className="login-title">Log In</h2>
 

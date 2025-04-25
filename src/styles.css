@@ -2094,7 +2094,8 @@
 
 /* Input Fields */
 .login-input {
-  width: 93%;
+  width: 320px;
+  height: 40px;
   padding: 10px;
   border: 2px solid #318516;
   border-radius: 20px;
@@ -2104,7 +2105,8 @@
 
 /* Log In Button */
 .login-button {
-  width: 100%;
+  width: 320px;
+  height: 40px;
   padding: 10px;
   background: #318516;
   color: #ffffff;
