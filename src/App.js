@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-route
 import Webcam from "react-webcam";
 import { useEffect, useContext } from "react";
 import "./styles.css";
-import { SignupContext, SignupContextProvider } from "./SignupContext";
+import { SignupContext, SignupProvider } from "./SignupContext";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -36,23 +36,23 @@ const Login = () => {
     e.preventDefault();
     setError("");
     setLoading(true);
-
+  
     if (!email || !password) {
       setError("Please enter both email and password.");
       setLoading(false);
       return;
     }
-
+  
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
+  
       const data = await response.json();
       console.log("API Response:", data);
-
+  
       if (response.ok && data.success) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("userId", data.user_id);
@@ -62,11 +62,11 @@ const Login = () => {
           userId: data.user_id,
           planId: data.plan_id,
         });
-
+  
         const storedUserId = localStorage.getItem("userId");
         const storedPlanId = localStorage.getItem("planId");
         console.log("Verified localStorage:", { storedUserId, storedPlanId });
-
+  
         navigate("/dashboard");
       } else {
         setError(data.message || "Login failed. Please try again.");
@@ -1067,7 +1067,7 @@ const App = () => {
   return (
     <div className="app-wrapper">
       <Router>
-        <SignupContextProvider>
+        <SignupProvider>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -1084,7 +1084,7 @@ const App = () => {
             <Route path="/record" element={<Record />} />
             <Route path="/plan" element={<Plan />} />
           </Routes>
-        </SignupContextProvider>
+        </SignupProvider>
       </Router>
     </div>
   );
