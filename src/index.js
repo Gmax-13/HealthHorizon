@@ -10,7 +10,6 @@ root.render(
     <SignupProvider>
       <App />
     </SignupProvider>,
-    document.getElementById("root")
   </React.StrictMode>
 );
 
